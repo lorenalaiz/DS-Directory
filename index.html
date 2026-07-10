@@ -660,44 +660,17 @@
     GOOGLE_PLACES_API_KEY
   } from './js/config.js';
 
-/* Drop-in replacement for window.storage, backed by Firestore, so the rest of the app needs no changes. */
-window.storage = {
-  async get(key, shared){
-    try{
-      const snap = await db.collection(FIRESTORE_COLLECTION).doc(key).get();
-      if(!snap.exists) return null;
-      const data = snap.data();
-      return { key, value: data.value, shared: !!shared };
-    }catch(e){
-      throw new Error('Storage get failed: ' + e.message);
-    }
-  },
-  async set(key, value, shared){
-    try{
-      await db.collection(FIRESTORE_COLLECTION).doc(key).set({ value, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
-      return { key, value, shared: !!shared };
-    }catch(e){
-      throw new Error('Storage set failed: ' + e.message);
-    }
-  },
-  async delete(key, shared){
-    try{
-      await db.collection(FIRESTORE_COLLECTION).doc(key).delete();
-      return { key, deleted: true, shared: !!shared };
-    }catch(e){
-      throw new Error('Storage delete failed: ' + e.message);
-    }
-  },
-  async list(prefix, shared){
-    try{
-      const snapshot = await db.collection(FIRESTORE_COLLECTION).get();
-      const keys = snapshot.docs.map(d=>d.id).filter(k=>!prefix || k.startsWith(prefix));
-      return { keys, prefix, shared: !!shared };
-    }catch(e){
-      throw new Error('Storage list failed: ' + e.message);
-    }
-  }
-};
+  import {storageService} from './js/storage-service.js';
+  window.storage = storageService;
+
+  import { 
+    showToast,
+    escapeHtml, 
+    formatPhone, 
+    displayHostname, 
+    instagramUrl, 
+    facebookUrl 
+  } from './js/utils.js';
 
 const STORAGE_KEY = 'professionals-list';
 const CATEGORY_COLORS = {
@@ -931,53 +904,7 @@ async function fillPostcodeFromPlace(placeId){
   }
 }
 
-function showToast(msg){
-  toast.textContent = msg;
-  toast.classList.add('show');
-  setTimeout(()=>toast.classList.remove('show'), 2200);
-}
 
-function escapeHtml(str){
-  const div = document.createElement('div');
-  div.textContent = str || '';
-  return div.innerHTML;
-}
-
-function formatPhone(raw){
-  if(!raw) return '';
-  const digits = raw.replace(/\D/g, '');
-  if(digits.length === 10 && /^0[45]/.test(digits)){
-    // Australian mobile: 04XX XXX XXX / 05XX XXX XXX
-    return `${digits.slice(0,4)} ${digits.slice(4,7)} ${digits.slice(7)}`;
-  }
-  if(digits.length === 10 && digits[0] === '0'){
-    // Australian landline: (0X) XXXX XXXX
-    return `(${digits.slice(0,2)}) ${digits.slice(2,6)} ${digits.slice(6)}`;
-  }
-  return raw; // unrecognised format — show exactly what was entered
-}
-
-function displayHostname(url){
-  try{
-    const withProtocol = /^https?:\/\//i.test(url) ? url : 'https://' + url;
-    const host = new URL(withProtocol).hostname.replace(/^www\./i, '');
-    return host;
-  }catch(e){
-    return url.replace(/^https?:\/\//i,'').split('/')[0];
-  }
-}
-
-function instagramUrl(value){
-  const v = value.trim();
-  if(/^https?:\/\//i.test(v)) return v;
-  return 'https://instagram.com/' + v.replace(/^@/, '');
-}
-
-function facebookUrl(value){
-  const v = value.trim();
-  if(/^https?:\/\//i.test(v)) return v;
-  return 'https://facebook.com/' + v.replace(/^@/, '');
-}
 
 async function migrateLegacyProfessionals(){
   try{
