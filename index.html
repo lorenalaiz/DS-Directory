@@ -648,23 +648,17 @@
     </span>
   </div>
 </div>
+<script type="module">
+  import {
+    db,
+    auth,
+    storage
+  } from './js/firebase-service.js';
 
-<script>
-/* ---------- Firebase setup (replaces Claude's window.storage) ---------- */
-const firebaseConfig = {
-  apiKey: "AIzaSyBFMGcYixpUYBZfXEShYqvTljLPB7DkwvM",
-  authDomain: "ds-database-84002.firebaseapp.com",
-  projectId: "ds-database-84002",
-  storageBucket: "ds-database-84002.firebasestorage.app",
-  messagingSenderId: "659800955073",
-  appId: "1:659800955073:web:a466fc585c5ce872165c40",
-  measurementId: "G-HZWBB259P9"
-};
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-const auth = firebase.auth();
-const storage = firebase.storage();
-const FIRESTORE_COLLECTION = 'ds-network-data';
+  import {
+    FIRESTORE_COLLECTION,
+    GOOGLE_PLACES_API_KEY
+  } from './js/config.js';
 
 /* Drop-in replacement for window.storage, backed by Firestore, so the rest of the app needs no changes. */
 window.storage = {
@@ -792,7 +786,7 @@ const filterCat = document.getElementById('filterCat');
 const filterSuburb = document.getElementById('filterSuburb');
 
 /* ---------- Address autocomplete (Google Places API — New) ---------- */
-const GOOGLE_PLACES_API_KEY = 'AIzaSyDVcDCvuwBN7b1g2txwwHay1kRfmEB92bk';
+
 const addressInput = document.getElementById('f-endereco');
 const addressSuggestions = document.getElementById('addressSuggestions');
 let addressDebounceTimer = null;
