@@ -1,7 +1,17 @@
 export function showToast(msg){
+  const toast = document.getElementById('toast');
+
+  if(!toast){
+    console.warn('Toast element was not found.');
+    return;
+  }
+
   toast.textContent = msg;
   toast.classList.add('show');
-  setTimeout(()=>toast.classList.remove('show'), 2200);
+
+  setTimeout(()=>{
+    toast.classList.remove('show');
+  }, 2200);
 }
 
 export function escapeHtml(str){
@@ -44,4 +54,16 @@ export function facebookUrl(value){
   const v = value.trim();
   if(/^https?:\/\//i.test(v)) return v;
   return 'https://facebook.com/' + v.replace(/^@/, '');
+}
+
+export function timeAgo(ts){
+  const seconds = Math.floor((Date.now() - ts) / 1000);
+  if(seconds < 60) return 'just now';
+  const minutes = Math.floor(seconds / 60);
+  if(minutes < 60) return minutes + (minutes===1 ? ' minute ago' : ' minutes ago');
+  const hours = Math.floor(minutes / 60);
+  if(hours < 24) return hours + (hours===1 ? ' hour ago' : ' hours ago');
+  const days = Math.floor(hours / 24);
+  if(days < 30) return days + (days===1 ? ' day ago' : ' days ago');
+  return new Date(ts).toLocaleDateString();
 }
