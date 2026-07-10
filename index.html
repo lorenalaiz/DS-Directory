@@ -1650,8 +1650,14 @@ let pendingRemovalRequest = null; // { type, targetId, profId, name }
 
 function openRequestRemovalModal(type, targetId, profId, name){
   pendingRemovalRequest = { type, targetId, profId, name };
-  document.getElementById('reqRemovalTarget').textContent =
-    type === 'review' ? `Review: ${name}` : `Professional: ${name}`;
+  const labels = {
+    review: 'Review',
+    professional: 'Professional',
+    product: 'Product',
+    family: 'Family',
+    marketplace: 'Marketplace listing'
+  };
+  document.getElementById('reqRemovalTarget').textContent = `${labels[type] || 'Item'}: ${name}`;
   document.getElementById('reqRemovalName').value = '';
   document.getElementById('reqRemovalNameError').style.display = 'none';
   document.getElementById('reqRemovalReason').value = '';
@@ -1711,6 +1717,24 @@ function requestDeleteReview(reviewId){
   if(!p) return;
   const review = (p.reviews||[]).find(r=>r.id===reviewId);
   openRequestRemovalModal('review', reviewId, p.id, `${p.nome}${review ? ` (by ${review.author})` : ''}`);
+}
+
+function requestDeleteProduct(id){
+  const p = productsData.find(x=>x.id===id);
+  if(!p) return;
+  openRequestRemovalModal('product', id, null, p.nome);
+}
+
+function requestDeleteFamily(id){
+  const f = familiesData.find(x=>x.id===id);
+  if(!f) return;
+  openRequestRemovalModal('family', id, null, f.nome);
+}
+
+function requestDeleteMarketplace(id){
+  const m = marketplaceData.find(x=>x.id===id);
+  if(!m) return;
+  openRequestRemovalModal('marketplace', id, null, m.nome);
 }
 
 async function deleteItem(id){
@@ -2023,6 +2047,9 @@ function renderProd(){
   gridAreaProd.querySelectorAll('[data-del]').forEach(btn=>{
     btn.addEventListener('click', ()=>deleteProdItem(btn.getAttribute('data-del')));
   });
+  gridAreaProd.querySelectorAll('[data-reqdel-product]').forEach(btn=>{
+    btn.addEventListener('click', ()=>requestDeleteProduct(btn.getAttribute('data-reqdel-product')));
+  });
   gridAreaProd.querySelectorAll('[data-details]').forEach(btn=>{
     btn.addEventListener('click', ()=>{
       const item = productsData.find(x=>x.id===btn.getAttribute('data-details'));
@@ -2046,7 +2073,7 @@ function tableRowHtmlProd(p){
     <td class="table-actions">
       <button class="btn-edit" data-details="${p.id}">Details</button>
       <button class="btn-edit" data-edit="${p.id}">Edit</button>
-      <button class="btn-danger-text" data-del="${p.id}">Delete</button>
+      ${isAdminUser ? `<button class="btn-danger-text" data-del="${p.id}">Delete</button>` : `<button class="btn-edit" data-reqdel-product="${p.id}">Request removal</button>`}
     </td>
   </tr>`;
 }
@@ -2071,7 +2098,7 @@ function cardHtmlProd(p){
       ${p.indicadoPor ? `<div class="referred">Recommended by ${escapeHtml(p.indicadoPor)}</div>` : ''}
       ${p.observacoes ? `<div class="notes">${escapeHtml(p.observacoes)}</div>` : ''}
       <div class="card-actions">
-        <button class="btn-danger-text" data-del="${p.id}">Delete</button>
+        ${isAdminUser ? `<button class="btn-danger-text" data-del="${p.id}">Delete</button>` : `<button class="btn-edit" data-reqdel-product="${p.id}">Request removal</button>`}
         <button class="btn-edit" data-edit="${p.id}">Edit</button>
       </div>
     </div>
@@ -2475,6 +2502,9 @@ function renderFam(){
   gridAreaFam.querySelectorAll('[data-del]').forEach(btn=>{
     btn.addEventListener('click', ()=>deleteFamItem(btn.getAttribute('data-del')));
   });
+  gridAreaFam.querySelectorAll('[data-reqdel-family]').forEach(btn=>{
+    btn.addEventListener('click', ()=>requestDeleteFamily(btn.getAttribute('data-reqdel-family')));
+  });
   gridAreaFam.querySelectorAll('[data-details]').forEach(btn=>{
     btn.addEventListener('click', ()=>{
       const item = familiesData.find(x=>x.id===btn.getAttribute('data-details'));
@@ -2495,7 +2525,7 @@ function tableRowHtmlFam(f){
     <td class="table-actions">
       <button class="btn-edit" data-details="${f.id}">Details</button>
       <button class="btn-edit" data-edit="${f.id}">Edit</button>
-      <button class="btn-danger-text" data-del="${f.id}">Delete</button>
+      ${isAdminUser ? `<button class="btn-danger-text" data-del="${f.id}">Delete</button>` : `<button class="btn-edit" data-reqdel-family="${f.id}">Request removal</button>`}
     </td>
   </tr>`;
 }
@@ -2518,7 +2548,7 @@ function cardHtmlFam(f){
       ${kidsLine ? `<div class="kids-line"><b>Kids:</b> ${kidsLine}</div>` : ''}
       ${f.observacoes ? `<div class="notes">${escapeHtml(f.observacoes)}</div>` : ''}
       <div class="card-actions">
-        <button class="btn-danger-text" data-del="${f.id}">Delete</button>
+        ${isAdminUser ? `<button class="btn-danger-text" data-del="${f.id}">Delete</button>` : `<button class="btn-edit" data-reqdel-family="${f.id}">Request removal</button>`}
         <button class="btn-edit" data-edit="${f.id}">Edit</button>
       </div>
     </div>
@@ -2764,9 +2794,18 @@ function renderDeleteRequests(){
     gridAreaReq.innerHTML = `<div class="empty-state"><div class="display">No pending requests</div><p>Removal requests from the community will show up here.</p></div>`;
     return;
   }
-  gridAreaReq.innerHTML = `<div class="grid">${deleteRequestsData.map(req=>`
+  const reqTypeInfo = {
+    professional: { label: 'Professional', color: '#2E5FA3' },
+    review: { label: 'Review', color: '#7B6BA8' },
+    product: { label: 'Product', color: '#D97D4C' },
+    family: { label: 'Family', color: '#5C9EA0' },
+    marketplace: { label: 'Marketplace', color: '#8A6D3D' }
+  };
+  gridAreaReq.innerHTML = `<div class="grid">${deleteRequestsData.map(req=>{
+    const info = reqTypeInfo[req.type] || { label: 'Item', color: '#7A8590' };
+    return `
     <div class="card">
-      <div class="tags"><span class="tag" style="background:${req.type==='review' ? '#7B6BA8' : '#2E5FA3'}"><span class="dot"></span>${req.type==='review' ? 'Review' : 'Professional'}</span></div>
+      <div class="tags"><span class="tag" style="background:${info.color}"><span class="dot"></span>${info.label}</span></div>
       <div class="body">
         <h3 style="font-size:15px;">${escapeHtml(req.name || '(unnamed)')}</h3>
         ${req.reason ? `<div class="notes" style="border-top:none;padding-top:0;"><strong>Reason:</strong> ${escapeHtml(req.reason)}</div>` : ''}
@@ -2777,7 +2816,8 @@ function renderDeleteRequests(){
         </div>
       </div>
     </div>
-  `).join('')}</div>`;
+  `;
+  }).join('')}</div>`;
 
   gridAreaReq.querySelectorAll('[data-approve]').forEach(btn=>{
     btn.addEventListener('click', ()=>approveDeleteRequest(btn.getAttribute('data-approve')));
@@ -2804,6 +2844,23 @@ async function approveDeleteRequest(reqId){
       if(p && p.reviews) p.reviews = p.reviews.filter(r=>r.id!==req.targetId);
       render();
       logActivity('professional', 'deleted', req.name);
+    }else if(req.type === 'product'){
+      await deleteProductDoc(req.targetId);
+      productsData = productsData.filter(x=>x.id!==req.targetId);
+      populateCategoryFilterProd();
+      renderProd();
+      logActivity('product', 'deleted', req.name);
+    }else if(req.type === 'family'){
+      await deleteFamilyDoc(req.targetId);
+      familiesData = familiesData.filter(x=>x.id!==req.targetId);
+      populateSuburbFilter();
+      renderFam();
+      logActivity('family', 'deleted', req.name);
+    }else if(req.type === 'marketplace'){
+      await deleteMarketplaceDoc(req.targetId);
+      marketplaceData = marketplaceData.filter(x=>x.id!==req.targetId);
+      renderMkt();
+      logActivity('marketplace', 'deleted', req.name);
     }
     await db.collection('delete-requests').doc(reqId).delete();
     deleteRequestsData = deleteRequestsData.filter(r=>r.id!==reqId);
@@ -2905,11 +2962,11 @@ function renderActivity(){
 /* ---------- Backup & Restore ---------- */
 document.getElementById('backupBtn').addEventListener('click', async ()=>{
   try{
-    const [profSnap, prodRes, famRes, mktRes, actSnap, msgSnap, reviewsByProf] = await Promise.all([
+    const [profSnap, prodSnap, famSnap, mktSnap, actSnap, msgSnap, reviewsByProf] = await Promise.all([
       db.collection('professionals').get(),
-      window.storage.get(PROD_STORAGE_KEY, true),
-      window.storage.get(FAM_STORAGE_KEY, true),
-      window.storage.get(MKT_STORAGE_KEY, true),
+      db.collection('products').get(),
+      db.collection('families').get(),
+      db.collection('marketplace').get(),
       db.collection('ds-network-activity').orderBy('at', 'desc').limit(300).get(),
       db.collection('ds-network-messages').orderBy('at', 'desc').limit(300).get(),
       loadAllReviews()
@@ -2917,9 +2974,9 @@ document.getElementById('backupBtn').addEventListener('click', async ()=>{
     const backup = {
       exportedAt: new Date().toISOString(),
       professionals: profSnap.docs.map(d=>({ id: d.id, ...d.data(), reviews: reviewsByProf[d.id] || [] })),
-      products: prodRes && prodRes.value ? JSON.parse(prodRes.value) : [],
-      families: famRes && famRes.value ? JSON.parse(famRes.value) : [],
-      marketplace: mktRes && mktRes.value ? JSON.parse(mktRes.value) : [],
+      products: prodSnap.docs.map(d=>({ id: d.id, ...d.data() })),
+      families: famSnap.docs.map(d=>({ id: d.id, ...d.data() })),
+      marketplace: mktSnap.docs.map(d=>({ id: d.id, ...d.data() })),
       activityLog: actSnap.docs.map(d=>d.data()),
       contactMessages: msgSnap.docs.map(d=>d.data())
     };
@@ -2989,9 +3046,19 @@ document.getElementById('restoreFileInput').addEventListener('change', async (e)
         }
       }));
     }
-    if(parsed.products) await window.storage.set(PROD_STORAGE_KEY, JSON.stringify(parsed.products), true);
-    if(parsed.families) await window.storage.set(FAM_STORAGE_KEY, JSON.stringify(parsed.families), true);
-    if(parsed.marketplace) await window.storage.set(MKT_STORAGE_KEY, JSON.stringify(parsed.marketplace), true);
+    async function restoreCollection(collectionName, items){
+      if(!items) return;
+      const existing = await db.collection(collectionName).get();
+      await Promise.all(existing.docs.map(d=>d.ref.delete()));
+      await Promise.all(items.map(item=>{
+        const id = item.id || (Date.now().toString(36)+Math.random().toString(36).slice(2,7));
+        const {id: _drop, ...rest} = item;
+        return db.collection(collectionName).doc(id).set(rest);
+      }));
+    }
+    await restoreCollection('products', parsed.products);
+    await restoreCollection('families', parsed.families);
+    await restoreCollection('marketplace', parsed.marketplace);
     showToast('Backup restored. Reloading...');
     await logActivity('system', 'restored', `Backup from ${exportedDate}`);
     setTimeout(()=>location.reload(), 1200);
@@ -3321,6 +3388,9 @@ function renderMkt(){
   gridAreaMkt.querySelectorAll('[data-del]').forEach(btn=>{
     btn.addEventListener('click', ()=>deleteMktItem(btn.getAttribute('data-del')));
   });
+  gridAreaMkt.querySelectorAll('[data-reqdel-marketplace]').forEach(btn=>{
+    btn.addEventListener('click', ()=>requestDeleteMarketplace(btn.getAttribute('data-reqdel-marketplace')));
+  });
   gridAreaMkt.querySelectorAll('[data-details]').forEach(btn=>{
     btn.addEventListener('click', ()=>{
       const item = marketplaceData.find(x=>x.id===btn.getAttribute('data-details'));
@@ -3376,7 +3446,7 @@ function tableRowHtmlMkt(m){
     <td class="table-actions">
       <button class="btn-edit" data-details="${m.id}">Details</button>
       <button class="btn-edit" data-edit="${m.id}">Edit</button>
-      <button class="btn-danger-text" data-del="${m.id}">Delete</button>
+      ${isAdminUser ? `<button class="btn-danger-text" data-del="${m.id}">Delete</button>` : `<button class="btn-edit" data-reqdel-marketplace="${m.id}">Request removal</button>`}
     </td>
   </tr>`;
 }
@@ -3416,7 +3486,7 @@ function cardHtmlMkt(m){
       ${m.postedBy ? `<div class="referred">Posted by ${escapeHtml(m.postedBy)}</div>` : ''}
       ${m.observacoes ? `<div class="notes">${escapeHtml(m.observacoes)}</div>` : ''}
       <div class="card-actions">
-        <button class="btn-danger-text" data-del="${m.id}">Delete</button>
+        ${isAdminUser ? `<button class="btn-danger-text" data-del="${m.id}">Delete</button>` : `<button class="btn-edit" data-reqdel-marketplace="${m.id}">Request removal</button>`}
         <button class="btn-edit" data-edit="${m.id}">Edit</button>
       </div>
     </div>
