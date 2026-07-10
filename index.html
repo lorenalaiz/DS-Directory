@@ -38,6 +38,9 @@
   h1,h2,h3,.display{font-family:'Fraunces',serif;}
 
   .wrap{max-width:960px;margin:0 auto;padding:0 20px 80px;}
+  @media (min-width:1300px){
+    .wrap{max-width:1180px;}
+  }
 
   header.top{
     margin:0 0 28px;padding:38px 32px 32px;border-radius:0 0 28px 28px;
@@ -74,7 +77,14 @@
     transition:all .15s ease;
   }
   .view-tab.active{background:var(--primary);color:#fff;border-color:var(--primary);box-shadow:0 2px 8px rgba(46,95,163,0.28);}
+  .view-tab.has-alert:not(.active){color:#B8452E;font-weight:700;border-color:#F0C4B8;}
   .view-tab:not(.active):hover{border-color:var(--primary);color:var(--primary-dark);}
+  .tab-badge{
+    display:inline-flex;align-items:center;justify-content:center;
+    min-width:17px;height:17px;padding:0 4px;margin-left:5px;border-radius:100px;
+    background:#B8452E;color:#fff;font-size:10.5px;font-weight:700;line-height:1;
+  }
+  .view-tab.active .tab-badge{background:#fff;color:var(--primary);}
 
   .view-mode-toggle{display:flex;gap:4px;background:var(--card);border:1px solid var(--border);border-radius:100px;padding:3px;margin-left:8px;}
 
@@ -128,11 +138,11 @@
   }
   .ndis-guide-page{
     background:var(--card);border:1px solid var(--border);border-radius:16px;
-    padding:24px 26px;font-size:13.5px;line-height:1.6;color:var(--ink);max-width:720px;
+    padding:32px 40px;font-size:14px;line-height:1.65;color:var(--ink);max-width:820px;margin:0 auto;
   }
-  .ndis-guide-page h4{font-family:'Fraunces',serif;font-size:15.5px;margin:20px 0 10px;color:var(--primary-dark);}
+  .ndis-guide-page h4{font-family:'Fraunces',serif;font-size:16.5px;margin:26px 0 10px;color:var(--primary-dark);}
   .ndis-guide-page h4:first-of-type{margin-top:0;}
-  .ndis-guide-page p{margin:0 0 10px;}
+  .ndis-guide-page p{margin:0 0 12px;}
   .ndis-guide-page strong{color:var(--ink);}
   .search-box{
     flex:1;min-width:200px;position:relative;
@@ -356,8 +366,9 @@
     <button class="view-tab" data-view="families" id="tabFamilies">Families</button>
     <button class="view-tab" data-view="marketplace" id="tabMarketplace">Marketplace</button>
     <button class="view-tab" data-view="ndisguide" id="tabNdisguide">NDIS Guide</button>
-    <button class="view-tab admin-only" data-view="messages" id="tabMessages" style="display:none;">Messages</button>
+    <button class="view-tab admin-only" data-view="messages" id="tabMessages" style="display:none;">Messages<span class="tab-badge" id="badgeMessages" style="display:none;"></span></button>
     <button class="view-tab admin-only" data-view="activity" id="tabActivity" style="display:none;">Activity</button>
+    <button class="view-tab admin-only" data-view="requests" id="tabRequests" style="display:none;">Requests<span class="tab-badge" id="badgeRequests" style="display:none;"></span></button>
     <div class="contact-admin-group" style="display:flex;gap:8px;margin-left:auto;align-items:center;">
       <button class="btn btn-ghost" id="contactBtn">Contact</button>
       <button class="btn btn-primary" id="installAppBtn" style="display:none;">📲 Install App</button>
@@ -376,7 +387,7 @@
   </div>
 
   <div id="viewProfessionals" class="view-panel">
-    <div class="ndis-banner">
+    <div class="ndis-banner" id="ndisBanner">
       <span>🧭 Want to know which professionals NDIS funding covers?</span>
       <button class="btn btn-ghost" id="viewNdisGuideBtn">View NDIS Guide →</button>
     </div>
@@ -472,7 +483,7 @@
   <div id="viewNdisguide" class="view-panel" style="display:none;">
     <div class="ndis-guide-page">
       <p><strong>What is the NDIS?</strong><br>
-      The NDIS (National Disability Insurance Scheme) is Australia's national system that provides funding for people with disability to access the services and professionals they need to live with more independence and quality of life. This funding can be used to pay for therapists, support workers, equipment, and other types of support — depending on what's included in each person's plan.</p>
+      The NDIS (National Disability Insurance Scheme) is Australia's national scheme that provides funding for people with disability to access the supports they need to live more independently and improve their quality of life. Depending on what's included in a person's plan, this funding can help pay for therapists, support workers, equipment, and other essential services.</p>
 
       <h4>🩺 Therapists / Allied Health</h4>
       <p><strong>Occupational Therapist (OT)</strong><br>Helps a person gain more independence in daily life — from dressing and bathing to recommending equipment, home modifications, and assistive technology.</p>
@@ -527,6 +538,12 @@
     </div>
     <div class="count-row" id="countRowAct"></div>
     <div id="gridAreaAct"></div>
+  </div>
+
+  <div id="viewRequests" class="view-panel" style="display:none;">
+    <p style="font-size:12.5px;color:var(--muted);margin:0 0 16px;">Removal requests from the community — approve to delete for real, or deny to keep it as-is.</p>
+    <div class="count-row" id="countRowReq"></div>
+    <div id="gridAreaReq"></div>
   </div>
 </div>
 
@@ -859,6 +876,31 @@
       <div id="detailsModalBody"></div>
       <div class="modal-actions">
         <button class="btn btn-ghost" id="closeDetailsBtn">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="overlayRequestRemoval">
+  <div class="modal" style="max-width:420px;">
+    <div class="modal-head">
+      <h2>Request removal</h2>
+    </div>
+    <div class="modal-body">
+      <p id="reqRemovalTarget" style="font-size:13px;color:var(--muted);margin:-8px 0 14px;"></p>
+      <div class="form-group">
+        <label>Your name <span class="req">*</span></label>
+        <input id="reqRemovalName" type="text" placeholder="So the admin knows who's asking">
+        <div class="error-text" id="reqRemovalNameError" style="display:none;">Please enter your name.</div>
+      </div>
+      <div class="form-group">
+        <label>Reason <span class="req">*</span></label>
+        <textarea id="reqRemovalReason" placeholder="Why should this be removed?"></textarea>
+        <div class="error-text" id="reqRemovalError" style="display:none;">Please tell the admin why this should be removed.</div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" id="closeReqRemovalBtn">Cancel</button>
+        <button class="btn btn-primary" id="submitReqRemovalBtn">Send request</button>
       </div>
     </div>
   </div>
@@ -1298,17 +1340,24 @@ async function migrateReviewsToSubcollection(){
     if(localStorage.getItem('ds-migrated-reviews-subcollection')) return;
     const snap = await db.collection('professionals').get();
     await Promise.all(snap.docs.map(async d=>{
-      const embedded = d.data().reviews;
-      if(Array.isArray(embedded) && embedded.length){
+      const profRef = db.collection('professionals').doc(d.id);
+      // Read-and-clear the embedded field inside a transaction, so two near-simultaneous
+      // runs (e.g. during a deploy reload) can't both see it before either clears it —
+      // only one of them will ever actually get a non-empty array back.
+      const embedded = await db.runTransaction(async (tx)=>{
+        const freshDoc = await tx.get(profRef);
+        const current = freshDoc.data() ? freshDoc.data().reviews : null;
+        if(Array.isArray(current) && current.length){
+          tx.update(profRef, { reviews: firebase.firestore.FieldValue.delete() });
+          return current;
+        }
+        return null;
+      });
+      if(embedded){
         await Promise.all(embedded.map(r=>{
           const {id: _drop, ...rest} = r;
-          return db.collection('professionals').doc(d.id).collection('reviews').add(rest);
+          return profRef.collection('reviews').add(rest);
         }));
-        // Remove the now-migrated field from the main document so a second device/browser
-        // running this same migration later doesn't find it again and duplicate everything.
-        await db.collection('professionals').doc(d.id).update({
-          reviews: firebase.firestore.FieldValue.delete()
-        });
       }
     }));
     localStorage.setItem('ds-migrated-reviews-subcollection', '1');
@@ -1326,6 +1375,19 @@ async function loadAllReviews(){
       const profId = d.ref.parent.parent.id;
       if(!reviewsByProf[profId]) reviewsByProf[profId] = [];
       reviewsByProf[profId].push({ id: d.id, ...d.data() });
+    });
+    // Safety net: if the same review ever ended up as two separate documents (e.g. from an
+    // old migration re-run), only show one of them — keep the earliest, drop the rest.
+    Object.keys(reviewsByProf).forEach(profId=>{
+      const seen = new Set();
+      reviewsByProf[profId] = reviewsByProf[profId]
+        .sort((a,b)=>(a.at||0)-(b.at||0))
+        .filter(r=>{
+          const key = `${r.author||''}|${r.rating||''}|${r.comment||''}`;
+          if(seen.has(key)) return false;
+          seen.add(key);
+          return true;
+        });
     });
   }catch(e){
     console.error('Failed to load reviews', e);
@@ -1450,6 +1512,9 @@ function render(){
   gridArea.querySelectorAll('[data-del]').forEach(btn=>{
     btn.addEventListener('click', ()=>deleteItem(btn.getAttribute('data-del')));
   });
+  gridArea.querySelectorAll('[data-reqdel]').forEach(btn=>{
+    btn.addEventListener('click', ()=>requestDeleteProfessional(btn.getAttribute('data-reqdel')));
+  });
   gridArea.querySelectorAll('[data-reviews]').forEach(btn=>{
     btn.addEventListener('click', ()=>openReviewsModal(btn.getAttribute('data-reviews')));
   });
@@ -1480,7 +1545,7 @@ function tableRowHtml(p){
     <td class="table-actions">
       <button class="btn-edit" data-details="${p.id}">Details</button>
       <button class="btn-edit" data-edit="${p.id}">Edit</button>
-      <button class="btn-danger-text" data-del="${p.id}">Delete</button>
+      ${isAdminUser ? `<button class="btn-danger-text" data-del="${p.id}">Delete</button>` : `<button class="btn-edit" data-reqdel="${p.id}">Request removal</button>`}
     </td>
   </tr>`;
 }
@@ -1526,7 +1591,7 @@ function cardHtml(p){
       ${p.indicadoPor ? `<div class="referred">Referred by ${escapeHtml(p.indicadoPor)}</div>` : ''}
       ${p.observacoes ? `<div class="notes">${escapeHtml(p.observacoes)}</div>` : ''}
       <div class="card-actions">
-        <button class="btn-danger-text" data-del="${p.id}">Delete</button>
+        ${isAdminUser ? `<button class="btn-danger-text" data-del="${p.id}">Delete</button>` : `<button class="btn-edit" data-reqdel="${p.id}">Request removal</button>`}
         <button class="btn-edit" data-edit="${p.id}">Edit</button>
       </div>
     </div>
@@ -1580,6 +1645,73 @@ document.getElementById('starInput').addEventListener('click', (e)=>{
     updateStarInput();
   }
 });
+
+let pendingRemovalRequest = null; // { type, targetId, profId, name }
+
+function openRequestRemovalModal(type, targetId, profId, name){
+  pendingRemovalRequest = { type, targetId, profId, name };
+  document.getElementById('reqRemovalTarget').textContent =
+    type === 'review' ? `Review: ${name}` : `Professional: ${name}`;
+  document.getElementById('reqRemovalName').value = '';
+  document.getElementById('reqRemovalNameError').style.display = 'none';
+  document.getElementById('reqRemovalReason').value = '';
+  document.getElementById('reqRemovalError').style.display = 'none';
+  document.getElementById('overlayRequestRemoval').classList.add('open');
+}
+
+document.getElementById('closeReqRemovalBtn').addEventListener('click', ()=>{
+  document.getElementById('overlayRequestRemoval').classList.remove('open');
+});
+document.getElementById('overlayRequestRemoval').addEventListener('click', (e)=>{
+  if(e.target.id === 'overlayRequestRemoval') document.getElementById('overlayRequestRemoval').classList.remove('open');
+});
+
+document.getElementById('submitReqRemovalBtn').addEventListener('click', async ()=>{
+  const requesterName = document.getElementById('reqRemovalName').value.trim();
+  if(!requesterName){
+    document.getElementById('reqRemovalNameError').style.display = 'block';
+    return;
+  }
+  document.getElementById('reqRemovalNameError').style.display = 'none';
+
+  const reason = document.getElementById('reqRemovalReason').value.trim();
+  if(!reason){
+    document.getElementById('reqRemovalError').style.display = 'block';
+    return;
+  }
+  document.getElementById('reqRemovalError').style.display = 'none';
+  if(!pendingRemovalRequest) return;
+
+  const btn = document.getElementById('submitReqRemovalBtn');
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+  try{
+    const { type, targetId, profId, name } = pendingRemovalRequest;
+    const payload = { type, targetId, name, requesterName, reason, requestedAt: Date.now() };
+    if(type === 'review') payload.profId = profId;
+    await db.collection('delete-requests').add(payload);
+    document.getElementById('overlayRequestRemoval').classList.remove('open');
+    showToast('Request sent — the admin will review it.');
+  }catch(e){
+    console.error('Failed to send removal request', e);
+    showToast('Something went wrong sending the request. Please try again.');
+  }
+  btn.textContent = 'Send request';
+  btn.disabled = false;
+});
+
+function requestDeleteProfessional(id){
+  const p = data.find(x=>x.id===id);
+  if(!p) return;
+  openRequestRemovalModal('professional', id, null, p.nome);
+}
+
+function requestDeleteReview(reviewId){
+  const p = data.find(x=>x.id===reviewingProfId);
+  if(!p) return;
+  const review = (p.reviews||[]).find(r=>r.id===reviewId);
+  openRequestRemovalModal('review', reviewId, p.id, `${p.nome}${review ? ` (by ${review.author})` : ''}`);
+}
 
 async function deleteItem(id){
   const p = data.find(x=>x.id===id);
@@ -1661,7 +1793,7 @@ filterCat.addEventListener('change', render);
 filterSuburb.addEventListener('change', render);
 
 /* ---------- View tab switching ---------- */
-const TAB_IDS = ['professionals','products','families','marketplace','ndisguide','messages','activity'];
+const TAB_IDS = ['professionals','products','families','marketplace','ndisguide','messages','activity','requests'];
 function switchView(view, persist=true){
   TAB_IDS.forEach(v=>{
     document.getElementById('tab'+v.charAt(0).toUpperCase()+v.slice(1)).classList.toggle('active', v===view);
@@ -1676,8 +1808,13 @@ function switchView(view, persist=true){
   if(view === 'activity' && typeof loadActivityData === 'function'){
     loadActivityData();
   }
+  if(view === 'requests' && typeof loadDeleteRequests === 'function'){
+    loadDeleteRequests();
+  }
   if(view === 'messages' && typeof loadMessagesData === 'function'){
-    loadMessagesData();
+    loadMessagesData().then(()=>{
+      localStorage.setItem('ds-messages-last-seen', Date.now());
+    });
   }
 }
 document.getElementById('tabProfessionals').addEventListener('click', ()=>switchView('professionals'));
@@ -1688,6 +1825,7 @@ document.getElementById('tabNdisguide').addEventListener('click', ()=>switchView
 document.getElementById('viewNdisGuideBtn').addEventListener('click', ()=>switchView('ndisguide'));
 document.getElementById('tabMessages').addEventListener('click', ()=>switchView('messages'));
 document.getElementById('tabActivity').addEventListener('click', ()=>switchView('activity'));
+document.getElementById('tabRequests').addEventListener('click', ()=>switchView('requests'));
 
 /* ---------- Cards / Table view mode (independent per section) ---------- */
 const VIEW_MODE_SECTIONS = ['professionals','products','families','marketplace','messages'];
@@ -2557,9 +2695,24 @@ function updateFamiliesMap(){
 /* Kick off data loading now that every function and DOM reference above has been declared */
 /* ---------- Activity log ---------- */
 
+let cachedUserIp = null;
+async function getUserIp(){
+  if(cachedUserIp) return cachedUserIp;
+  try{
+    const res = await fetch('https://api.ipify.org?format=json');
+    const data = await res.json();
+    cachedUserIp = data.ip;
+    return cachedUserIp;
+  }catch(e){
+    console.error('Could not determine IP', e);
+    return null;
+  }
+}
+
 async function logActivity(section, action, name){
   try{
-    await db.collection('ds-network-activity').add({ section, action, name, at: Date.now() });
+    const ip = await getUserIp();
+    await db.collection('ds-network-activity').add({ section, action, name, at: Date.now(), ip: ip || 'unknown' });
   }catch(e){
     console.error('Failed to log activity', e);
   }
@@ -2583,6 +2736,97 @@ const ACTION_COLORS = { added: '#5C8A3D', edited: '#4A82A0', deleted: '#C15C4A',
 
 const gridAreaAct = document.getElementById('gridAreaAct');
 const countRowAct = document.getElementById('countRowAct');
+const gridAreaReq = document.getElementById('gridAreaReq');
+const countRowReq = document.getElementById('countRowReq');
+let deleteRequestsData = [];
+
+async function loadDeleteRequests(){
+  gridAreaReq.innerHTML = `<div class="empty-state">Loading...</div>`;
+  try{
+    const snap = await db.collection('delete-requests').orderBy('requestedAt', 'desc').limit(200).get();
+    deleteRequestsData = snap.docs.map(d=>({ id: d.id, ...d.data() }));
+  }catch(e){
+    console.error('Failed to load delete requests', e);
+    deleteRequestsData = [];
+  }
+  renderDeleteRequests();
+}
+
+function renderDeleteRequests(){
+  document.getElementById('tabRequests').classList.toggle('has-alert', deleteRequestsData.length > 0);
+  const reqBadge = document.getElementById('badgeRequests');
+  reqBadge.textContent = deleteRequestsData.length;
+  reqBadge.style.display = deleteRequestsData.length > 0 ? '' : 'none';
+  countRowReq.textContent = deleteRequestsData.length
+    ? `${deleteRequestsData.length} request${deleteRequestsData.length===1?'':'s'}`
+    : '';
+  if(!deleteRequestsData.length){
+    gridAreaReq.innerHTML = `<div class="empty-state"><div class="display">No pending requests</div><p>Removal requests from the community will show up here.</p></div>`;
+    return;
+  }
+  gridAreaReq.innerHTML = `<div class="grid">${deleteRequestsData.map(req=>`
+    <div class="card">
+      <div class="tags"><span class="tag" style="background:${req.type==='review' ? '#7B6BA8' : '#2E5FA3'}"><span class="dot"></span>${req.type==='review' ? 'Review' : 'Professional'}</span></div>
+      <div class="body">
+        <h3 style="font-size:15px;">${escapeHtml(req.name || '(unnamed)')}</h3>
+        ${req.reason ? `<div class="notes" style="border-top:none;padding-top:0;"><strong>Reason:</strong> ${escapeHtml(req.reason)}</div>` : ''}
+        <div style="font-size:11.5px;color:var(--muted);margin:6px 0 14px;">Requested by ${escapeHtml(req.requesterName || 'Anonymous')} · ${timeAgo(req.requestedAt)}</div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-primary" style="padding:8px 14px;font-size:13px;" data-approve="${req.id}">Approve (delete)</button>
+          <button class="btn btn-ghost" style="padding:8px 14px;font-size:13px;" data-deny="${req.id}">Deny</button>
+        </div>
+      </div>
+    </div>
+  `).join('')}</div>`;
+
+  gridAreaReq.querySelectorAll('[data-approve]').forEach(btn=>{
+    btn.addEventListener('click', ()=>approveDeleteRequest(btn.getAttribute('data-approve')));
+  });
+  gridAreaReq.querySelectorAll('[data-deny]').forEach(btn=>{
+    btn.addEventListener('click', ()=>denyDeleteRequest(btn.getAttribute('data-deny')));
+  });
+}
+
+async function approveDeleteRequest(reqId){
+  const req = deleteRequestsData.find(r=>r.id===reqId);
+  if(!req) return;
+  if(!confirm(`Delete "${req.name}" for real? This cannot be undone.`)) return;
+  try{
+    if(req.type === 'professional'){
+      await deleteProfessionalDoc(req.targetId);
+      data = data.filter(x=>x.id!==req.targetId);
+      populateCategoryFilter();
+      render();
+      logActivity('professional', 'deleted', req.name);
+    }else if(req.type === 'review'){
+      await db.collection('professionals').doc(req.profId).collection('reviews').doc(req.targetId).delete();
+      const p = data.find(x=>x.id===req.profId);
+      if(p && p.reviews) p.reviews = p.reviews.filter(r=>r.id!==req.targetId);
+      render();
+      logActivity('professional', 'deleted', req.name);
+    }
+    await db.collection('delete-requests').doc(reqId).delete();
+    deleteRequestsData = deleteRequestsData.filter(r=>r.id!==reqId);
+    renderDeleteRequests();
+    showToast('Approved and deleted.');
+  }catch(e){
+    console.error('Failed to approve request', e);
+    showToast('Something went wrong: ' + (e.message || 'unknown error'));
+  }
+}
+
+async function denyDeleteRequest(reqId){
+  if(!confirm('Deny this request? The item will stay as-is.')) return;
+  try{
+    await db.collection('delete-requests').doc(reqId).delete();
+    deleteRequestsData = deleteRequestsData.filter(r=>r.id!==reqId);
+    renderDeleteRequests();
+    showToast('Request denied.');
+  }catch(e){
+    console.error('Failed to deny request', e);
+    showToast('Something went wrong: ' + (e.message || 'unknown error'));
+  }
+}
 let activityData = [];
 
 async function migrateLegacyActivityLog(){
@@ -2625,6 +2869,7 @@ function activityRowHtml(entry){
     <td><span style="font-weight:600;color:${color};">${escapeHtml(action)}</span></td>
     <td>${escapeHtml(label)}</td>
     <td>${escapeHtml(entry.name || '(unnamed)')}</td>
+    <td style="white-space:nowrap;color:var(--muted);">${entry.ip ? escapeHtml(entry.ip) : ''}</td>
     <td style="white-space:nowrap;color:var(--muted);">${timeAgo(entry.at)}</td>
   </tr>`;
 }
@@ -2654,7 +2899,7 @@ function renderActivity(){
     return;
   }
 
-  gridAreaAct.innerHTML = buildTableWrap(['Action','Section','Item','When'], filtered.map(activityRowHtml).join(''));
+  gridAreaAct.innerHTML = buildTableWrap(['Action','Section','Item','IP','When'], filtered.map(activityRowHtml).join(''));
 }
 
 /* ---------- Backup & Restore ---------- */
@@ -2809,7 +3054,7 @@ function renderReviewsModal(){
           <span style="font-weight:600;font-size:13.5px;">${escapeHtml(r.author || 'Anonymous')}</span>
           <span style="font-size:11.5px;color:var(--muted);display:flex;align-items:center;gap:8px;">
             ${timeAgo(r.at)}
-            ${isAdminUser ? `<button class="btn-danger-text" style="padding:2px 4px;font-size:11.5px;" data-del-review="${r.id}">Delete</button>` : ''}
+            ${isAdminUser ? `<button class="btn-danger-text" style="padding:2px 4px;font-size:11.5px;" data-del-review="${r.id}">Delete</button>` : `<button class="btn-edit" style="padding:2px 4px;font-size:11.5px;" data-reqdel-review="${r.id}">Request removal</button>`}
           </span>
         </div>
         <div class="stars" style="margin:4px 0;">${starsHtml(r.rating)}</div>
@@ -2818,6 +3063,9 @@ function renderReviewsModal(){
     `).join('');
     listEl.querySelectorAll('[data-del-review]').forEach(btn=>{
       btn.addEventListener('click', ()=>deleteReview(btn.getAttribute('data-del-review')));
+    });
+    listEl.querySelectorAll('[data-reqdel-review]').forEach(btn=>{
+      btn.addEventListener('click', ()=>requestDeleteReview(btn.getAttribute('data-reqdel-review')));
     });
   }
 }
@@ -3322,6 +3570,13 @@ function setAdminUiVisible(isAdmin){
     el.style.display = isAdmin ? '' : 'none';
   });
   document.getElementById('adminLoginBtn').style.display = isAdmin ? 'none' : '';
+  document.getElementById('contactBtn').style.display = isAdmin ? 'none' : '';
+  document.getElementById('ndisBanner').style.display = isAdmin ? 'none' : '';
+  document.getElementById('tabNdisguide').style.display = isAdmin ? 'none' : '';
+  document.getElementById('installAppBtn').style.display = isAdmin ? 'none' : '';
+  if(isAdmin && document.getElementById('viewNdisguide').style.display !== 'none'){
+    switchView('professionals');
+  }
 }
 
 document.getElementById('adminMenuBtn').addEventListener('click', (e)=>{
@@ -3697,6 +3952,13 @@ function messageRowHtml(msg){
 }
 
 function renderMessages(){
+  const lastSeen = Number(localStorage.getItem('ds-messages-last-seen') || 0);
+  const unreadCount = messagesData.filter(m=>m.at > lastSeen).length;
+  const msgBadge = document.getElementById('badgeMessages');
+  msgBadge.textContent = unreadCount;
+  msgBadge.style.display = unreadCount > 0 ? '' : 'none';
+  document.getElementById('tabMessages').classList.toggle('has-alert', unreadCount > 0);
+
   countRowMsg.textContent = messagesData.length
     ? `${messagesData.length} message${messagesData.length===1?'':'s'}`
     : '';
@@ -3720,6 +3982,7 @@ loadFamiliesData();
 loadMarketplaceData();
 loadMessagesData();
 loadActivityData();
+loadDeleteRequests();
 
 document.getElementById('activityFromDate').addEventListener('change', renderActivity);
 document.getElementById('activityToDate').addEventListener('change', renderActivity);
@@ -3771,7 +4034,7 @@ function isIOS(){
 if(!isStandalone()){
   if(isIOS()){
     // iOS/Safari has no install prompt API — show tap-to-see-instructions instead
-    installBtn.style.display = '';
+    if(!isAdminUser) installBtn.style.display = '';
     installBtn.addEventListener('click', ()=>{
       alert('To install: tap the Share button (square with an arrow) at the bottom of Safari, then choose "Add to Home Screen". If you don\'t see it in the first row, tap "More" (or "View More") to find it.');
     });
@@ -3780,7 +4043,7 @@ if(!isStandalone()){
     window.addEventListener('beforeinstallprompt', (e)=>{
       e.preventDefault();
       deferredInstallPrompt = e;
-      installBtn.style.display = '';
+      if(!isAdminUser) installBtn.style.display = '';
     });
     installBtn.addEventListener('click', async ()=>{
       if(!deferredInstallPrompt) return;
