@@ -33,3 +33,31 @@ partials/                HTML fragments fetched at runtime (e.g. the NDIS Guide 
 The Firebase project (`js/config.js`) is the one and only production database — there
 is no emulator or staging project, so be careful when testing write paths (add/edit/
 delete/backup/restore) against it.
+
+## Config / secrets setup
+
+`js/config.js` is gitignored — it holds the Firebase config and the Google Places API
+key, and should never be committed. `js/config.template.js` is the checked-in template
+it's generated from.
+
+**Local development:**
+```
+cp js/config.template.js js/config.js
+```
+Then edit `js/config.js` and replace `__FIREBASE_API_KEY__` and
+`__GOOGLE_PLACES_API_KEY__` with real values (ask a teammate or pull them from the
+Firebase / Google Cloud consoles).
+
+**Cloudflare Pages deploy:**
+Set the build command to:
+```
+sed -e "s|__FIREBASE_API_KEY__|$FIREBASE_API_KEY|g" -e "s|__GOOGLE_PLACES_API_KEY__|$GOOGLE_PLACES_API_KEY|g" js/config.template.js > js/config.js
+```
+and set `FIREBASE_API_KEY` / `GOOGLE_PLACES_API_KEY` as environment variables in the
+Cloudflare Pages project settings. Build output directory stays the repo root (no other
+build step needed — this is still a static site).
+
+Both of these are **browser-visible client-side keys** — this only keeps them out of
+git, it doesn't hide them from anyone inspecting the live site. The real access control
+is: Firestore security rules (for the Firebase key) and HTTP-referrer + API restrictions
+set on the key itself in Google Cloud Console (for the Places key).

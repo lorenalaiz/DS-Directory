@@ -1,5 +1,5 @@
 export const firebaseConfig = {
-  apiKey: "AIzaSyBFMGcYixpUYBZfXEShYqvTljLPB7DkwvM",
+  apiKey: "__FIREBASE_API_KEY__",
   authDomain: "ds-database-84002.firebaseapp.com",
   projectId: "ds-database-84002",
   storageBucket: "ds-database-84002.firebasestorage.app",
@@ -10,4 +10,4 @@ export const firebaseConfig = {
 
 export const FIRESTORE_COLLECTION = 'ds-network-data';
 
-export const GOOGLE_PLACES_API_KEY = 'AIzaSyDVcDCvuwBN7b1g2txwwHay1kRfmEB92bk';
+export const GOOGLE_PLACES_API_KEY = '__GOOGLE_PLACES_API_KEY__';
