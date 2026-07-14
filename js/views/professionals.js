@@ -1,8 +1,8 @@
 /* ---------- Professionals ---------- */
 import { db, storageService } from '../firebase-service.js';
 import { GOOGLE_PLACES_API_KEY } from '../config.js';
-import { showToast, escapeHtml, formatPhone, displayHostname, instagramUrl, facebookUrl } from '../utils.js';
-import { STORAGE_KEY, KNOWN_CATEGORIES, CATEGORY_COLORS } from '../app.js';
+import { showToast, escapeHtml, formatPhone, displayHostname, instagramUrl, facebookUrl, newSessionToken } from '../utils.js';
+import { STORAGE_KEY, KNOWN_CATEGORIES, CATEGORY_COLORS } from '../constants.js';
 import {
   isAdminUser,
   RENDER_FN_BY_SECTION,
@@ -13,7 +13,6 @@ import {
   openRequestRemovalModal,
   logActivity
 } from '../shared.js';
-import { newSessionToken } from '../address-autocomplete.js';
 import { openReviewsModal } from './reviews.js';
 
 export let data = [];

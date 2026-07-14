@@ -1,7 +1,7 @@
 /* ---------- Marketplace ---------- */
 import { db, storageService } from '../firebase-service.js';
 import { showToast, escapeHtml, formatPhone } from '../utils.js';
-import { MKT_STORAGE_KEY, MKT_KNOWN_CATEGORIES, MKT_CATEGORY_COLORS, MKT_TYPE_COLORS } from '../app.js';
+import { MKT_STORAGE_KEY, MKT_KNOWN_CATEGORIES, MKT_CATEGORY_COLORS, MKT_TYPE_COLORS } from '../constants.js';
 import {
   isAdminUser,
   RENDER_FN_BY_SECTION,

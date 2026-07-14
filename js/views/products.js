@@ -1,7 +1,7 @@
 /* ---------- Products & Toys ---------- */
 import { db, storageService } from '../firebase-service.js';
 import { showToast, escapeHtml, displayHostname } from '../utils.js';
-import { PROD_STORAGE_KEY, PRODUCT_KNOWN_CATEGORIES, PRODUCT_CATEGORY_COLORS } from '../app.js';
+import { PROD_STORAGE_KEY, PRODUCT_KNOWN_CATEGORIES, PRODUCT_CATEGORY_COLORS } from '../constants.js';
 import {
   isAdminUser,
   RENDER_FN_BY_SECTION,

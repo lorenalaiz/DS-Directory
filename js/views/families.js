@@ -1,8 +1,8 @@
 /* ---------- Families & Playgroups ---------- */
 import { db, storageService } from '../firebase-service.js';
 import { GOOGLE_PLACES_API_KEY } from '../config.js';
-import { showToast, escapeHtml, formatPhone } from '../utils.js';
-import { FAM_STORAGE_KEY } from '../app.js';
+import { showToast, escapeHtml, formatPhone, newSessionToken } from '../utils.js';
+import { FAM_STORAGE_KEY } from '../constants.js';
 import {
   isAdminUser,
   RENDER_FN_BY_SECTION,
@@ -12,7 +12,6 @@ import {
   openRequestRemovalModal,
   logActivity
 } from '../shared.js';
-import { newSessionToken } from '../address-autocomplete.js';
 import { pendingPhotoUploads, wirePhotoUpload, wirePhotoRemoveButton } from '../photo-upload.js';
 
 export let familiesData = [];

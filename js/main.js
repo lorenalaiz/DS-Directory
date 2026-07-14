@@ -8,10 +8,9 @@
 import './firebase-service.js';
 import './config.js';
 import './utils.js';
-import './app.js';
+import './constants.js';
 
 import './shared.js';
-import './address-autocomplete.js';
 import './photo-upload.js';
 
 import { loadData } from './views/professionals.js';
