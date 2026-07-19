@@ -43,32 +43,27 @@
   }
 
   header.top{
-    margin:0 0 28px;padding:38px 32px 32px;border-radius:0 0 28px 28px;
-    background:linear-gradient(135deg, var(--primary) 0%, #3E6FB8 55%, var(--primary) 100%);
+    margin:0 0 28px;padding:46px 34px 40px;border-radius:0 0 28px 28px;
+    background:linear-gradient(120deg, #274C82 0%, #3E6FB8 60%, var(--primary) 100%);
     position:relative;overflow:hidden;
   }
-  header.top::before{
-    content:"";position:absolute;inset:0;opacity:.16;
-    background-image:radial-gradient(#fff 2.5px, transparent 2.5px), radial-gradient(#fff 2.5px, transparent 2.5px);
-    background-size:34px 34px;background-position:0 0, 17px 17px;
-    pointer-events:none;
+  .header-top-row{position:relative;z-index:1;}
+  .header-chromo-deco{
+    position:absolute;right:28px;top:60px;width:99px;height:auto;
+    opacity:0.92;pointer-events:none;z-index:0;
   }
-  header.top::after{
-    content:"";position:absolute;right:-40px;bottom:-60px;width:180px;height:180px;border-radius:50%;
-    background:var(--accent);opacity:.28;pointer-events:none;
+  @media (max-width:900px){
+    .header-chromo-deco{display:none;}
   }
   header.top .eyebrow{
-    font-family:'JetBrains Mono',monospace;
-    font-size:11px;letter-spacing:.14em;text-transform:uppercase;
-    color:var(--accent);font-weight:600;margin-bottom:8px;position:relative;
+    display:inline-block;font-family:'JetBrains Mono',monospace;
+    font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--accent);font-weight:600;margin-bottom:16px;position:relative;
+    border:1px solid rgba(244,185,66,0.5);padding:5px 12px;border-radius:100px;
   }
-  header.top h1{font-size:34px;font-weight:600;margin:0 0 8px;color:#fff;position:relative;display:flex;align-items:center;gap:12px;}
-  .t21-badge{
-    font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;
-    background:var(--accent);color:#3A2C05;padding:5px 12px;border-radius:100px;
-    letter-spacing:.04em;
-  }
-  header.top p{margin:0;color:rgba(255,255,255,0.88);font-size:14.5px;max-width:520px;line-height:1.55;position:relative;}
+  header.top h1{font-size:38px;font-weight:600;margin:0 0 6px;color:#fff;position:relative;display:flex;align-items:center;gap:12px;}
+  .header-title-underline{width:150px;height:3px;background:var(--accent);border-radius:2px;margin-bottom:14px;position:relative;}
+  header.top p{margin:0;color:rgba(255,255,255,0.88);font-size:14.5px;max-width:520px;line-height:1.6;position:relative;}
 
   .view-tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;row-gap:10px;}
   .view-tab{
@@ -343,7 +338,7 @@
   @media (max-width:600px){
     .two-col{grid-template-columns:1fr;}
     header.top{padding:30px 22px 26px;border-radius:0 0 22px 22px;}
-    header.top h1{font-size:27px;}
+    header.top h1{font-size:29px;}
     .view-tabs{gap:5px;row-gap:8px;}
     .view-tab{padding:7px 11px;font-size:12.5px;}
     .view-tabs .btn{padding:7px 11px;font-size:12.5px;}
@@ -355,9 +350,15 @@
 <body>
 <div class="wrap">
   <header class="top">
-    <div class="eyebrow">T21 Community</div>
-    <h1>DS Network</h1>
-    <p>A shared directory of pediatricians, therapists, products, and nearby families recommended by our T21 community.</p>
+    <div class="header-top-row">
+      <div>
+        <div class="eyebrow">T21 Community</div>
+        <h1>DS Network</h1>
+        <div class="header-title-underline"></div>
+      </div>
+    </div>
+    <p>A community-built directory of doctors, therapists, products, and families, recommended by parents in our T21 community.</p>
+    <img src="chromo-network.png" alt="" class="header-chromo-deco">
   </header>
 
   <div class="view-tabs">
@@ -394,7 +395,7 @@
     <div class="toolbar">
       <div class="search-box">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input id="searchInput" type="text" placeholder="Search by name, city, or note..." autocomplete="off" name="search-professionals">
+        <input id="searchInput" type="text" placeholder="Search by name, city, or note..." autocomplete="new-password" name="search-professionals">
       </div>
       <select id="filterCat">
         <option value="">All specialties</option>
@@ -417,7 +418,7 @@
     <div class="toolbar">
       <div class="search-box">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input id="searchInputProd" type="text" placeholder="Search by name, brand, or note..." autocomplete="off" name="search-products">
+        <input id="searchInputProd" type="text" placeholder="Search by name, brand, or note..." autocomplete="new-password" name="search-products">
       </div>
       <select id="filterCatProd">
         <option value="">All categories</option>
@@ -438,7 +439,7 @@
     <div class="toolbar">
       <div class="search-box">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input id="searchInputFam" type="text" placeholder="Search by name, suburb, or note..." autocomplete="off" name="search-families">
+        <input id="searchInputFam" type="text" placeholder="Search by name, suburb, or note..." autocomplete="new-password" name="search-families">
       </div>
       <select id="filterSuburbFam">
         <option value="">All suburbs</option>
@@ -460,7 +461,7 @@
     <div class="toolbar">
       <div class="search-box">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input id="searchInputMkt" type="text" placeholder="Search by item, category, or note..." autocomplete="off" name="search-marketplace">
+        <input id="searchInputMkt" type="text" placeholder="Search by item, category, or note..." autocomplete="new-password" name="search-marketplace">
       </div>
       <select id="filterTypeMkt">
         <option value="">All listing types</option>
@@ -565,12 +566,6 @@
         <input id="f-categoria-other" type="text" placeholder="Other (separate with commas if more than one)" style="margin-top:8px;">
         <div class="error-text" id="err-categoria" style="display:none;">Select at least one specialty.</div>
       </div>
-      <div class="form-group">
-        <label>Rating <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;">(optional)</span></label>
-        <div class="star-input" id="starInput">
-          <span data-v="1">★</span><span data-v="2">★</span><span data-v="3">★</span><span data-v="4">★</span><span data-v="5">★</span>
-        </div>
-      </div>
       <div class="two-col">
         <div class="form-group">
           <label>Phone</label>
@@ -609,8 +604,26 @@
         </div>
       </div>
       <div class="form-group">
-        <label>Referred by</label>
-        <input id="f-indicado" type="text" placeholder="Who recommended this professional?">
+        <label class="ndis-check">
+          <input id="f-leave-review" type="checkbox">
+          <span>⭐ Would you like to leave a review for this professional?</span>
+        </label>
+        <div id="f-review-inline" style="display:none;margin-top:12px;padding:14px;background:var(--primary-light);border-radius:10px;">
+          <div class="form-group">
+            <label>Your rating</label>
+            <div class="star-input" id="starInputInlineReview">
+              <span data-v="1">★</span><span data-v="2">★</span><span data-v="3">★</span><span data-v="4">★</span><span data-v="5">★</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Your name <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;">(optional)</span></label>
+            <input id="f-review-author" type="text" placeholder="Your name">
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label>Comment <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;">(optional)</span></label>
+            <textarea id="f-review-comment" placeholder="Share your experience..."></textarea>
+          </div>
+        </div>
       </div>
       <div class="form-group">
         <label>Notes</label>
@@ -884,7 +897,7 @@
 <div class="overlay" id="overlayRequestRemoval">
   <div class="modal" style="max-width:420px;">
     <div class="modal-head">
-      <h2>Request removal</h2>
+      <h2 id="reqRemovalModalTitle">Request removal</h2>
     </div>
     <div class="modal-body">
       <p id="reqRemovalTarget" style="font-size:13px;color:var(--muted);margin:-8px 0 14px;"></p>
@@ -894,7 +907,7 @@
         <div class="error-text" id="reqRemovalNameError" style="display:none;">Please enter your name.</div>
       </div>
       <div class="form-group">
-        <label>Reason <span class="req">*</span></label>
+        <label><span id="reqRemovalReasonLabel">Reason</span> <span class="req" id="reqRemovalReasonReq">*</span></label>
         <textarea id="reqRemovalReason" placeholder="Why should this be removed?"></textarea>
         <div class="error-text" id="reqRemovalError" style="display:none;">Please tell the admin why this should be removed.</div>
       </div>
@@ -1081,7 +1094,6 @@ const PRODUCT_KNOWN_CATEGORIES = ['Feeding','Stroller','Car Seat','Baby Carrier'
 
 let data = [];
 let editingId = null;
-let currentStars = 0;
 
 const KNOWN_CATEGORIES = ['Pediatrician','Cardiologist','Physiotherapist','Speech Therapist','Occupational Therapist','Psychologist','Nutritionist','Dentist','Geneticist','Neurologist','Ophthalmologist','ENT','Pulmonologist','Sleep Specialist','Endocrinologist','Orthopedist','Psychopedagogue','Special Education Teacher','Music Therapist','Social Worker','Lactation Consultant'];
 
@@ -1561,8 +1573,8 @@ function starsHtml(n){
 
 function averageRating(p){
   const ratings = (p.reviews || []).map(r=>r.rating).filter(Boolean);
-  if(ratings.length) return ratings.reduce((a,b)=>a+b,0) / ratings.length;
-  return p.avaliacao || null; // fall back to the initial rating only if there are no written reviews yet
+  if(!ratings.length) return null; // no written reviews yet — the old creation-time rating is retired, don't show it
+  return ratings.reduce((a,b)=>a+b,0) / ratings.length;
 }
 
 function cardHtml(p){
@@ -1588,7 +1600,6 @@ function cardHtml(p){
       ${p.website ? `<div class="field-row"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 0 20 15.3 15.3 0 0 1 0-20z"/></svg><a href="${escapeHtml(/^https?:\/\//i.test(p.website) ? p.website : 'https://'+p.website)}" target="_blank" rel="noopener noreferrer">${escapeHtml(displayHostname(p.website))}</a></div>` : ''}
       ${p.instagram ? `<div class="field-row"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg><a href="${escapeHtml(instagramUrl(p.instagram))}" target="_blank" rel="noopener noreferrer">Instagram</a></div>` : ''}
       ${p.facebook ? `<div class="field-row"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg><a href="${escapeHtml(facebookUrl(p.facebook))}" target="_blank" rel="noopener noreferrer">Facebook</a></div>` : ''}
-      ${p.indicadoPor ? `<div class="referred">Referred by ${escapeHtml(p.indicadoPor)}</div>` : ''}
       ${p.observacoes ? `<div class="notes">${escapeHtml(p.observacoes)}</div>` : ''}
       <div class="card-actions">
         ${isAdminUser ? `<button class="btn-danger-text" data-del="${p.id}">Delete</button>` : `<button class="btn-edit" data-reqdel="${p.id}">Request removal</button>`}
@@ -1616,12 +1627,15 @@ function openModal(id){
   document.getElementById('f-website').value = p ? p.website||'' : '';
   document.getElementById('f-instagram').value = p ? p.instagram||'' : '';
   document.getElementById('f-facebook').value = p ? p.facebook||'' : '';
-  document.getElementById('f-indicado').value = p ? p.indicadoPor||'' : '';
   document.getElementById('f-obs').value = p ? p.observacoes||'' : '';
   document.getElementById('err-nome').style.display = 'none';
 
-  currentStars = p ? (p.avaliacao||0) : 0;
-  updateStarInput();
+  document.getElementById('f-leave-review').checked = false;
+  document.getElementById('f-review-inline').style.display = 'none';
+  document.getElementById('f-review-author').value = '';
+  document.getElementById('f-review-comment').value = '';
+  currentStarsInlineReview = 0;
+  updateStarInputInlineReview();
 
   overlay.classList.add('open');
   setTimeout(()=>document.getElementById('f-nome').focus(), 50);
@@ -1632,24 +1646,27 @@ function closeModal(){
   editingId = null;
 }
 
-function updateStarInput(){
-  document.querySelectorAll('#starInput span').forEach(s=>{
-    s.classList.toggle('on', Number(s.getAttribute('data-v')) <= currentStars);
+let currentStarsInlineReview = 0;
+function updateStarInputInlineReview(){
+  document.querySelectorAll('#starInputInlineReview span').forEach(s=>{
+    s.classList.toggle('on', Number(s.getAttribute('data-v')) <= currentStarsInlineReview);
   });
 }
-
-document.getElementById('starInput').addEventListener('click', (e)=>{
+document.getElementById('starInputInlineReview').addEventListener('click', (e)=>{
   if(e.target.tagName === 'SPAN'){
     const v = Number(e.target.getAttribute('data-v'));
-    currentStars = (currentStars === v) ? v-1 : v;
-    updateStarInput();
+    currentStarsInlineReview = (currentStarsInlineReview === v) ? v-1 : v;
+    updateStarInputInlineReview();
   }
+});
+document.getElementById('f-leave-review').addEventListener('change', (e)=>{
+  document.getElementById('f-review-inline').style.display = e.target.checked ? 'block' : 'none';
 });
 
 let pendingRemovalRequest = null; // { type, targetId, profId, name }
 
-function openRequestRemovalModal(type, targetId, profId, name){
-  pendingRemovalRequest = { type, targetId, profId, name };
+function openRequestRemovalModal(type, targetId, profId, name, action, payload, originalPayload){
+  pendingRemovalRequest = { type, targetId, profId, name, action: action || 'delete', payload: payload || null, originalPayload: originalPayload || null };
   const labels = {
     review: 'Review',
     professional: 'Professional',
@@ -1657,11 +1674,17 @@ function openRequestRemovalModal(type, targetId, profId, name){
     family: 'Family',
     marketplace: 'Marketplace listing'
   };
+  const isEdit = pendingRemovalRequest.action === 'edit';
+  document.getElementById('reqRemovalModalTitle').textContent = isEdit ? 'Request edit approval' : 'Request removal';
   document.getElementById('reqRemovalTarget').textContent = `${labels[type] || 'Item'}: ${name}`;
+  document.getElementById('reqRemovalReasonLabel').textContent = isEdit ? 'What did you change? (optional)' : 'Reason';
+  document.getElementById('reqRemovalReasonReq').style.display = isEdit ? 'none' : '';
+  document.getElementById('reqRemovalReason').placeholder = isEdit ? 'E.g. updated phone number and address' : 'Why should this be removed?';
   document.getElementById('reqRemovalName').value = '';
   document.getElementById('reqRemovalNameError').style.display = 'none';
   document.getElementById('reqRemovalReason').value = '';
   document.getElementById('reqRemovalError').style.display = 'none';
+  document.getElementById('submitReqRemovalBtn').textContent = isEdit ? 'Send for approval' : 'Send request';
   document.getElementById('overlayRequestRemoval').classList.add('open');
 }
 
@@ -1680,8 +1703,9 @@ document.getElementById('submitReqRemovalBtn').addEventListener('click', async (
   }
   document.getElementById('reqRemovalNameError').style.display = 'none';
 
+  const isEdit = pendingRemovalRequest && pendingRemovalRequest.action === 'edit';
   const reason = document.getElementById('reqRemovalReason').value.trim();
-  if(!reason){
+  if(!reason && !isEdit){
     document.getElementById('reqRemovalError').style.display = 'block';
     return;
   }
@@ -1689,20 +1713,25 @@ document.getElementById('submitReqRemovalBtn').addEventListener('click', async (
   if(!pendingRemovalRequest) return;
 
   const btn = document.getElementById('submitReqRemovalBtn');
+  const originalLabel = btn.textContent;
   btn.textContent = 'Sending...';
   btn.disabled = true;
   try{
-    const { type, targetId, profId, name } = pendingRemovalRequest;
-    const payload = { type, targetId, name, requesterName, reason, requestedAt: Date.now() };
-    if(type === 'review') payload.profId = profId;
-    await db.collection('delete-requests').add(payload);
+    const { type, targetId, profId, name, action, payload: proposedPayload, originalPayload } = pendingRemovalRequest;
+    const reqDoc = { type, targetId, name, requesterName, reason, action: action || 'delete', requestedAt: firebase.firestore.FieldValue.serverTimestamp() };
+    if(type === 'review') reqDoc.profId = profId;
+    if(action === 'edit'){
+      reqDoc.proposedPayload = proposedPayload;
+      reqDoc.originalPayload = originalPayload || null;
+    }
+    await db.collection('delete-requests').add(reqDoc);
     document.getElementById('overlayRequestRemoval').classList.remove('open');
-    showToast('Request sent — the admin will review it.');
+    showToast(isEdit ? 'Edit sent for approval — the admin will review it.' : 'Request sent — the admin will review it.');
   }catch(e){
     console.error('Failed to send removal request', e);
     showToast('Something went wrong sending the request. Please try again.');
   }
-  btn.textContent = 'Send request';
+  btn.textContent = originalLabel;
   btn.disabled = false;
 });
 
@@ -1772,6 +1801,11 @@ document.getElementById('saveBtn').addEventListener('click', async ()=>{
   const postcode = document.getElementById('f-postcode').value.trim();
   const capturedSuburb = document.getElementById('f-suburb-captured').value.trim();
   const suburb = capturedSuburb;
+  const existingProfForEdit = editingId ? data.find(x=>x.id===editingId) : null;
+
+  const saveBtn = document.getElementById('saveBtn');
+  saveBtn.textContent = 'Saving...';
+  saveBtn.disabled = true;
 
   const payload = {
     id: editingId || (Date.now().toString(36) + Math.random().toString(36).slice(2,7)),
@@ -1786,13 +1820,41 @@ document.getElementById('saveBtn').addEventListener('click', async ()=>{
     website: document.getElementById('f-website').value.trim(),
     instagram: document.getElementById('f-instagram').value.trim(),
     facebook: document.getElementById('f-facebook').value.trim(),
-    indicadoPor: document.getElementById('f-indicado').value.trim(),
+    // "Referred by" and the old creation-time star rating were retired from this form —
+    // preserve whatever a record already had so editing other fields never wipes them out.
+    indicadoPor: existingProfForEdit ? (existingProfForEdit.indicadoPor || '') : '',
     observacoes: document.getElementById('f-obs').value.trim(),
-    avaliacao: currentStars
+    avaliacao: existingProfForEdit ? (existingProfForEdit.avaliacao || 0) : 0
   };
 
+  async function submitInlineReviewIfRequested(profId){
+    if(!document.getElementById('f-leave-review').checked || currentStarsInlineReview === 0) return;
+    try{
+      await db.collection('professionals').doc(profId).collection('reviews').add({
+        author: document.getElementById('f-review-author').value.trim() || 'Anonymous',
+        rating: currentStarsInlineReview,
+        comment: document.getElementById('f-review-comment').value.trim(),
+        at: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    }catch(e){
+      console.error('Failed to post inline review', e);
+    }
+  }
+
+  if(!isAdminUser && editingId){
+    saveBtn.textContent = 'Save';
+    saveBtn.disabled = false;
+    closeModal();
+    await submitInlineReviewIfRequested(payload.id);
+    openRequestRemovalModal('professional', payload.id, null, nome, 'edit', payload, existingProfForEdit);
+    return;
+  }
+
   const ok = await saveProfessionalDoc(payload.id, payload);
+  saveBtn.textContent = 'Save';
+  saveBtn.disabled = false;
   if(ok){
+    await submitInlineReviewIfRequested(payload.id);
     if(editingId){
       const idx = data.findIndex(x=>x.id===editingId);
       if(idx>-1){
@@ -1805,8 +1867,7 @@ document.getElementById('saveBtn').addEventListener('click', async ()=>{
     }
     const wasEditing = !!editingId;
     closeModal();
-    populateCategoryFilter();
-    render();
+    await loadData(); // pick up the freshly-posted review (and its average rating) right away
     showToast(wasEditing ? 'Professional updated.' : 'Professional added.');
     logActivity('professional', wasEditing ? 'edited' : 'added', nome);
   }
@@ -2180,6 +2241,10 @@ document.getElementById('saveBtnProd').addEventListener('click', async ()=>{
   }
   document.getElementById('perr-nome').style.display = 'none';
 
+  const saveBtnProd = document.getElementById('saveBtnProd');
+  saveBtnProd.textContent = 'Saving...';
+  saveBtnProd.disabled = true;
+
   const payload = {
     id: editingProdId || (Date.now().toString(36) + Math.random().toString(36).slice(2,7)),
     nome,
@@ -2194,6 +2259,15 @@ document.getElementById('saveBtnProd').addEventListener('click', async ()=>{
     avaliacao: currentStarsProd
   };
 
+  if(!isAdminUser && editingProdId){
+    const originalProd = productsData.find(x=>x.id===editingProdId);
+    saveBtnProd.textContent = 'Save';
+    saveBtnProd.disabled = false;
+    closeProdModal();
+    openRequestRemovalModal('product', payload.id, null, nome, 'edit', payload, originalProd);
+    return;
+  }
+
   if(editingProdId){
     const idx = productsData.findIndex(x=>x.id===editingProdId);
     if(idx>-1) productsData[idx] = payload;
@@ -2202,6 +2276,8 @@ document.getElementById('saveBtnProd').addEventListener('click', async ()=>{
   }
 
   const ok = await saveProductDoc(payload.id, payload);
+  saveBtnProd.textContent = 'Save';
+  saveBtnProd.disabled = false;
   if(ok){
     const wasEditing = !!editingProdId;
     closeProdModal();
@@ -2654,6 +2730,15 @@ document.getElementById('saveBtnFam').addEventListener('click', async ()=>{
     observacoes: document.getElementById('ff-obs').value.trim()
   };
 
+  if(!isAdminUser && editingFamId){
+    const originalFam = familiesData.find(x=>x.id===editingFamId);
+    saveBtn.textContent = 'Save';
+    saveBtn.disabled = false;
+    closeFamModal();
+    openRequestRemovalModal('family', payload.id, null, nome, 'edit', payload, originalFam);
+    return;
+  }
+
   if(editingFamId){
     const idx = familiesData.findIndex(x=>x.id===editingFamId);
     if(idx>-1) familiesData[idx] = payload;
@@ -2742,14 +2827,22 @@ async function getUserIp(){
 async function logActivity(section, action, name){
   try{
     const ip = await getUserIp();
-    await db.collection('ds-network-activity').add({ section, action, name, at: Date.now(), ip: ip || 'unknown' });
+    await db.collection('ds-network-activity').add({ section, action, name, at: firebase.firestore.FieldValue.serverTimestamp(), ip: ip || 'unknown' });
   }catch(e){
     console.error('Failed to log activity', e);
   }
 }
 
+function toMillis(ts){
+  if(!ts) return Date.now(); // not yet resolved locally (serverTimestamp pending) — treat as "now"
+  if(typeof ts === 'number') return ts; // legacy client-side timestamps
+  if(typeof ts.toMillis === 'function') return ts.toMillis(); // Firestore Timestamp
+  return Date.now();
+}
+
 function timeAgo(ts){
-  const seconds = Math.floor((Date.now() - ts) / 1000);
+  const millis = toMillis(ts);
+  const seconds = Math.floor((Date.now() - millis) / 1000);
   if(seconds < 60) return 'just now';
   const minutes = Math.floor(seconds / 60);
   if(minutes < 60) return minutes + (minutes===1 ? ' minute ago' : ' minutes ago');
@@ -2757,7 +2850,7 @@ function timeAgo(ts){
   if(hours < 24) return hours + (hours===1 ? ' hour ago' : ' hours ago');
   const days = Math.floor(hours / 24);
   if(days < 30) return days + (days===1 ? ' day ago' : ' days ago');
-  return new Date(ts).toLocaleDateString();
+  return new Date(millis).toLocaleDateString();
 }
 
 const SECTION_LABELS = { professional: 'Professional', product: 'Product', family: 'Family', system: 'System', marketplace: 'Marketplace' };
@@ -2803,17 +2896,22 @@ function renderDeleteRequests(){
   };
   gridAreaReq.innerHTML = `<div class="grid">${deleteRequestsData.map(req=>{
     const info = reqTypeInfo[req.type] || { label: 'Item', color: '#7A8590' };
+    const isEdit = req.action === 'edit';
     return `
     <div class="card">
-      <div class="tags"><span class="tag" style="background:${info.color}"><span class="dot"></span>${info.label}</span></div>
+      <div class="tags">
+        <span class="tag" style="background:${info.color}"><span class="dot"></span>${info.label}</span>
+        <span class="tag" style="background:${isEdit ? '#3D7A3D' : '#B8452E'}"><span class="dot"></span>${isEdit ? 'Edit request' : 'Removal request'}</span>
+      </div>
       <div class="body">
         <h3 style="font-size:15px;">${escapeHtml(req.name || '(unnamed)')}</h3>
-        ${req.reason ? `<div class="notes" style="border-top:none;padding-top:0;"><strong>Reason:</strong> ${escapeHtml(req.reason)}</div>` : ''}
+        ${req.reason ? `<div class="notes" style="border-top:none;padding-top:0;"><strong>${isEdit ? 'Change note' : 'Reason'}:</strong> ${escapeHtml(req.reason)}</div>` : ''}
         <div style="font-size:11.5px;color:var(--muted);margin:6px 0 14px;">Requested by ${escapeHtml(req.requesterName || 'Anonymous')} · ${timeAgo(req.requestedAt)}</div>
         <div style="display:flex;gap:8px;">
-          <button class="btn btn-primary" style="padding:8px 14px;font-size:13px;" data-approve="${req.id}">Approve (delete)</button>
+          <button class="btn btn-primary" style="padding:8px 14px;font-size:13px;" data-approve="${req.id}">${isEdit ? 'Approve edit' : 'Approve (delete)'}</button>
           <button class="btn btn-ghost" style="padding:8px 14px;font-size:13px;" data-deny="${req.id}">Deny</button>
         </div>
+        ${isEdit ? `<div style="margin-top:10px;border-top:1px dashed var(--border);padding-top:10px;">${diffHtml(req.originalPayload, req.proposedPayload)}</div>` : ''}
       </div>
     </div>
   `;
@@ -2830,9 +2928,36 @@ function renderDeleteRequests(){
 async function approveDeleteRequest(reqId){
   const req = deleteRequestsData.find(r=>r.id===reqId);
   if(!req) return;
-  if(!confirm(`Delete "${req.name}" for real? This cannot be undone.`)) return;
+  const isEdit = req.action === 'edit';
+  if(!confirm(isEdit ? `Apply the proposed changes to "${req.name}"?` : `Delete "${req.name}" for real? This cannot be undone.`)) return;
   try{
-    if(req.type === 'professional'){
+    if(isEdit){
+      const pp = req.proposedPayload;
+      if(req.type === 'professional'){
+        const existing = data.find(x=>x.id===req.targetId);
+        pp.reviews = existing ? (existing.reviews || []) : []; // reviews live in a subcollection, never overwrite them here
+        await saveProfessionalDoc(req.targetId, pp);
+        const idx = data.findIndex(x=>x.id===req.targetId);
+        if(idx>-1) data[idx] = pp;
+        populateCategoryFilter();
+        render();
+        logActivity('professional', 'edited', req.name);
+      }else if(req.type === 'product'){
+        await saveProductDoc(req.targetId, pp);
+        const idx = productsData.findIndex(x=>x.id===req.targetId);
+        if(idx>-1) productsData[idx] = pp;
+        populateCategoryFilterProd();
+        renderProd();
+        logActivity('product', 'edited', req.name);
+      }else if(req.type === 'family'){
+        await saveFamilyDoc(req.targetId, pp);
+        const idx = familiesData.findIndex(x=>x.id===req.targetId);
+        if(idx>-1) familiesData[idx] = pp;
+        populateSuburbFilter();
+        renderFam();
+        logActivity('family', 'edited', req.name);
+      }
+    }else if(req.type === 'professional'){
       await deleteProfessionalDoc(req.targetId);
       data = data.filter(x=>x.id!==req.targetId);
       populateCategoryFilter();
@@ -2865,7 +2990,7 @@ async function approveDeleteRequest(reqId){
     await db.collection('delete-requests').doc(reqId).delete();
     deleteRequestsData = deleteRequestsData.filter(r=>r.id!==reqId);
     renderDeleteRequests();
-    showToast('Approved and deleted.');
+    showToast(isEdit ? 'Edit approved and applied.' : 'Approved and deleted.');
   }catch(e){
     console.error('Failed to approve request', e);
     showToast('Something went wrong: ' + (e.message || 'unknown error'));
@@ -2938,8 +3063,8 @@ function renderActivity(){
   const toTs = toVal ? new Date(toVal + 'T23:59:59').getTime() : null;
 
   const filtered = activityData.filter(entry=>{
-    if(fromTs && entry.at < fromTs) return false;
-    if(toTs && entry.at > toTs) return false;
+    if(fromTs && toMillis(entry.at) < fromTs) return false;
+    if(toTs && toMillis(entry.at) > toTs) return false;
     return true;
   });
 
@@ -3076,6 +3201,73 @@ const reviewsOverlay = document.getElementById('overlayReviews');
 
 /* ---------- Generic "Details" modal (used from table view to show the full card) ---------- */
 const overlayDetails = document.getElementById('overlayDetails');
+const DIFF_FIELD_LABELS = {
+  nome: 'Name', telefone: 'Phone', email: 'Email', endereco: 'Address',
+  website: 'Website', instagram: 'Instagram', facebook: 'Facebook',
+  observacoes: 'Notes', homeBased: 'Home service', categorias: 'Categories',
+  brand: 'Brand', price: 'Price', ndisCovered: 'Covered by NDIS',
+  parent1: 'Parent 1', parent2: 'Parent 2', playgroup: 'Open to playgroups',
+  photoUrl: 'Photo link', children: 'Kids'
+};
+const DIFF_IGNORE_FIELDS = ['id', 'suburb', 'postcode', 'lat', 'lon', 'reviews', 'avaliacao', 'indicadoPor', 'at'];
+
+function diffValueToText(v){
+  if(Array.isArray(v)){
+    if(v.length && typeof v[0] === 'object') return v.map(c=>c.name || JSON.stringify(c)).join(', ');
+    return v.join(', ');
+  }
+  if(typeof v === 'boolean') return v ? 'Yes' : 'No';
+  return (v === undefined || v === null || v === '') ? '(empty)' : String(v);
+}
+
+function computeDiff(original, proposed){
+  const diffs = [];
+  const keys = new Set([...Object.keys(original||{}), ...Object.keys(proposed||{})]);
+  keys.forEach(key=>{
+    if(DIFF_IGNORE_FIELDS.includes(key)) return;
+    const oldText = diffValueToText(original ? original[key] : undefined);
+    const newText = diffValueToText(proposed ? proposed[key] : undefined);
+    if(oldText !== newText){
+      diffs.push({ key, field: DIFF_FIELD_LABELS[key] || key, oldText, newText });
+    }
+  });
+  return diffs;
+}
+
+function diffHtml(original, proposed){
+  const diffs = computeDiff(original, proposed);
+  if(!diffs.length){
+    return `<p style="font-size:13.5px;color:var(--muted);">No changes detected.</p>`;
+  }
+  const PHOTO_FIELDS = ['photoUrl', 'fotos'];
+  return `
+    <p style="font-size:12.5px;color:var(--muted);margin:0 0 12px;">What would change if you approve this:</p>
+    ${diffs.map(d=>{
+      const isPhoto = PHOTO_FIELDS.includes(d.key);
+      return `
+      <div style="border-bottom:1px solid var(--border);padding:10px 0;">
+        <div style="font-weight:600;font-size:13px;margin-bottom:6px;">${escapeHtml(d.field)}</div>
+        ${isPhoto ? `
+          <div style="display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap;">
+            <div>
+              <div style="font-size:11px;color:#B8452E;margin-bottom:4px;">Current</div>
+              ${d.oldText && d.oldText !== '(empty)' ? `<img src="${escapeHtml(d.oldText)}" style="width:100px;height:100px;object-fit:cover;border-radius:8px;border:2px solid #B8452E;" onerror="this.style.display='none'">` : `<div style="font-size:12.5px;color:var(--muted);">(no photo)</div>`}
+            </div>
+            <div>
+              <div style="font-size:11px;color:#3D7A3D;margin-bottom:4px;">Proposed</div>
+              ${d.newText && d.newText !== '(empty)' ? `<img src="${escapeHtml(d.newText)}" style="width:100px;height:100px;object-fit:cover;border-radius:8px;border:2px solid #3D7A3D;" onerror="this.style.display='none'">` : `<div style="font-size:12.5px;color:var(--muted);">(no photo)</div>`}
+            </div>
+          </div>
+        ` : `
+          <div style="font-size:13px;color:#B8452E;text-decoration:line-through;margin-bottom:2px;">${escapeHtml(d.oldText)}</div>
+          <div style="font-size:13px;color:#3D7A3D;">${escapeHtml(d.newText)}</div>
+        `}
+      </div>
+    `;
+    }).join('')}
+  `;
+}
+
 function showDetailsModal(html){
   document.getElementById('detailsModalBody').innerHTML = html;
   overlayDetails.classList.add('open');
@@ -3107,7 +3299,7 @@ function renderReviewsModal(){
   const avg = averageRating(p);
   const count = (p.reviews||[]).length;
   document.getElementById('reviewsSummary').innerHTML = avg
-    ? `<div class="stars" style="font-size:16px;">${starsHtml(Math.round(avg))} <span style="color:var(--muted);font-size:13px;">${avg.toFixed(1)} average${count ? ` · ${count} review${count===1?'':'s'}` : ' · initial rating, no written reviews yet'}</span></div>`
+    ? `<div class="stars" style="font-size:16px;">${starsHtml(Math.round(avg))} <span style="color:var(--muted);font-size:13px;">${avg.toFixed(1)} average · ${count} review${count===1?'':'s'}</span></div>`
     : `<p style="color:var(--muted);font-size:13.5px;">No ratings yet — be the first to review.</p>`;
 
   const list = (p.reviews || []).slice().sort((a,b)=>b.at-a.at);
@@ -3596,6 +3788,10 @@ document.getElementById('saveBtnMkt').addEventListener('click', async ()=>{
 
   const existing = editingMktId ? marketplaceData.find(x=>x.id===editingMktId) : null;
 
+  const saveBtnMkt = document.getElementById('saveBtnMkt');
+  saveBtnMkt.textContent = 'Saving...';
+  saveBtnMkt.disabled = true;
+
   const payload = {
     id: editingMktId || (Date.now().toString(36) + Math.random().toString(36).slice(2,7)),
     nome,
@@ -3619,6 +3815,8 @@ document.getElementById('saveBtnMkt').addEventListener('click', async ()=>{
   }
 
   const ok = await saveMarketplaceDoc(payload.id, payload);
+  saveBtnMkt.textContent = 'Save';
+  saveBtnMkt.disabled = false;
   if(ok){
     const wasEditing = !!editingMktId;
     closeMktModal();
@@ -3643,7 +3841,7 @@ function setAdminUiVisible(isAdmin){
   document.getElementById('contactBtn').style.display = isAdmin ? 'none' : '';
   document.getElementById('ndisBanner').style.display = isAdmin ? 'none' : '';
   document.getElementById('tabNdisguide').style.display = isAdmin ? 'none' : '';
-  document.getElementById('installAppBtn').style.display = isAdmin ? 'none' : '';
+  document.getElementById('installAppBtn').style.display = (isAdmin || isStandalone()) ? 'none' : '';
   if(isAdmin && document.getElementById('viewNdisguide').style.display !== 'none'){
     switchView('professionals');
   }
@@ -3664,6 +3862,10 @@ auth.onAuthStateChanged(user=>{
   isAdminUser = !!user;
   setAdminUiVisible(!!user);
   if(reviewingProfId) renderReviewsModal();
+  if(user){
+    loadMessagesData();
+    loadDeleteRequests();
+  }
 });
 
 document.getElementById('adminLoginBtn').addEventListener('click', ()=>{
@@ -3970,7 +4172,7 @@ document.getElementById('submitContactBtn').addEventListener('click', async ()=>
   btn.textContent = 'Sending...';
   btn.disabled = true;
   try{
-    await db.collection('ds-network-messages').add({ name, email, phone, message, at: Date.now() });
+    await db.collection('ds-network-messages').add({ name, email, phone, message, at: firebase.firestore.FieldValue.serverTimestamp() });
     overlayContact.classList.remove('open');
     showToast('Thanks — your message has been sent!');
   }catch(e){
@@ -4023,7 +4225,7 @@ function messageRowHtml(msg){
 
 function renderMessages(){
   const lastSeen = Number(localStorage.getItem('ds-messages-last-seen') || 0);
-  const unreadCount = messagesData.filter(m=>m.at > lastSeen).length;
+  const unreadCount = messagesData.filter(m=>toMillis(m.at) > lastSeen).length;
   const msgBadge = document.getElementById('badgeMessages');
   msgBadge.textContent = unreadCount;
   msgBadge.style.display = unreadCount > 0 ? '' : 'none';
@@ -4045,6 +4247,14 @@ function renderMessages(){
   }
 }
 
+
+// Browsers sometimes restore previously-typed values into these fields (autofill/form
+// memory), even with autocomplete="off". Force them empty on every load so a stale
+// search term from a past session can never silently filter the list.
+['searchInput', 'searchInputProd', 'searchInputFam', 'searchInputMkt'].forEach(id=>{
+  const el = document.getElementById(id);
+  if(el) el.value = '';
+});
 
 loadData();
 loadProductsData();
