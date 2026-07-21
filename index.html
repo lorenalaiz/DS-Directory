@@ -1009,6 +1009,12 @@ const db = firebase.firestore();
 const auth = firebase.auth();
 const storage = firebase.storage();
 const FIRESTORE_COLLECTION = 'ds-network-data';
+if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+  db.useEmulator('localhost', 8080);
+  auth.useEmulator('http://localhost:9099');
+  storage.useEmulator('localhost', 9199);
+  console.log('Connected to Firebase emulators (local dev)');
+}
 
 /* Drop-in replacement for window.storage, backed by Firestore, so the rest of the app needs no changes. */
 window.storage = {
