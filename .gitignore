@@ -3,3 +3,6 @@ node_modules/
 test-results/
 playwright-report/
 playwright/.cache/
+firebase-debug.log
+firestore-debug.log
+*-debug.log
