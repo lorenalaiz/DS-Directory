@@ -1,0 +1,51 @@
+const { test, expect, ADMIN_EMAIL, ADMIN_PASSWORD } = require('../../fixtures');
+const { HomePage } = require('../../pages/HomePage');
+const { MarketplacePage } = require('../../pages/MarketplacePage');
+
+function uniqueName(label) {
+  return `E2E Test Listing ${label} ${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+}
+
+test.describe('Marketplace', () => {
+  test('marketplace listing price is required only for Sell/Rent, not Donate/Lend', async ({ page }) => {
+    const homePage = new HomePage(page);
+    const marketplacePage = new MarketplacePage(page);
+    const donateName = uniqueName('Donate');
+    const sellName = uniqueName('Sell');
+
+    await marketplacePage.goto();
+    try {
+      await marketplacePage.openForm();
+      await marketplacePage.fillRequiredFields({
+        name: donateName,
+        type: 'Donate',
+        condition: 'New',
+        postedBy: 'Visitor Tester',
+      });
+      await marketplacePage.phoneInput.fill('0412345678');
+      await marketplacePage.saveButton.click();
+      await expect(marketplacePage.card(donateName)).toBeVisible();
+
+      await marketplacePage.openForm();
+      await marketplacePage.fillRequiredFields({
+        name: sellName,
+        type: 'Sell',
+        condition: 'New',
+        postedBy: 'Visitor Tester',
+      });
+      await marketplacePage.phoneInput.fill('0412345678');
+      await marketplacePage.saveButton.click();
+      await expect(marketplacePage.priceError).toBeVisible();
+
+      await marketplacePage.priceInput.fill('50');
+      await marketplacePage.saveButton.click();
+      await expect(marketplacePage.card(sellName)).toBeVisible();
+    } finally {
+      await homePage.loginAsAdmin(ADMIN_EMAIL, ADMIN_PASSWORD);
+      await marketplacePage.goto();
+      await marketplacePage.deleteDirectly(donateName);
+      await marketplacePage.deleteDirectly(sellName);
+      await homePage.signOut();
+    }
+  });
+});
