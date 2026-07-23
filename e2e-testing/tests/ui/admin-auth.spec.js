@@ -11,8 +11,8 @@ test.describe('Admin authentication', () => {
     await expect(homePage.requestsTab).toBeHidden();
 
     await homePage.loginAsAdmin(
-      process.env.ADMIN_TEST_EMAIL,
-      process.env.ADMIN_TEST_PASSWORD,
+      process.env.ADMIN_EMAIL,
+      process.env.ADMIN_PASSWORD,
     );
 
     await expect(homePage.messagesTab).toBeVisible();

@@ -2,8 +2,8 @@ const base = require('@playwright/test');
 const { HomePage } = require('../pages/HomePage');
 const { ProfessionalsPage } = require('../pages/ProfessionalsPage');
 
-const ADMIN_EMAIL = process.env.ADMIN_TEST_EMAIL;
-const ADMIN_PASSWORD = process.env.ADMIN_TEST_PASSWORD;
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 
 const FIRESTORE_EMULATOR_BASE =
   'http://127.0.0.1:8080/v1/projects/ds-database-84002/databases/(default)/documents';
