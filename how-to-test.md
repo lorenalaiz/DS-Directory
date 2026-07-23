@@ -124,7 +124,37 @@ works today, not just recent changes.
 
 ---
 
-## Part 4 — Turn the checklist into real automated tests
+## Part 4 — Run all existing tests
+
+Once tests already exist (from a previous session, or written by someone
+else on the team), you don't need to regenerate anything — just run them.
+
+1. Make sure the app and the emulator from **Part 2** are still running,
+   and you saw "Connected to Firebase emulators" in the browser console.
+2. Make sure your local `.env` file has real values for `ADMIN_EMAIL` and
+   `ADMIN_PASSWORD` (copy from `.env.example` if you haven't set this up
+   yet) — some tests need to log in as admin, and will fail with a
+   confusing "expected string, got undefined" error if these are missing.
+3. In Claude Code, or directly in Terminal, run:
+   ```
+   npm run test:ui
+   ```
+4. This runs every test file under `e2e-testing/tests/`, across both
+   Chromium and Firefox. It'll take a few minutes — tests that write or
+   change data (adding a listing, admin approving a request, etc.) are
+   slower than ones that just check the page loaded correctly.
+5. At the end, you'll see a summary like `20 passed` or `2 failed`. If
+   anything fails, Playwright saves a screenshot, video, and trace of the
+   exact moment it failed under `e2e-testing/test-results/` — helpful for
+   figuring out what went wrong without having to reproduce it yourself.
+
+**One test needs to run alone, not alongside the others:** the
+restore-from-backup test replaces entire collections of data. If you ever
+see instructions to run it separately or notice tests interfering with
+each other, that's why — don't run it at the same time as anything else
+that's also writing data.
+
+## Part 5 — Turn a checklist into real automated tests
 
 Once you have a test plan (from Part 3), you can turn some or all of it
 into tests that run themselves automatically.
