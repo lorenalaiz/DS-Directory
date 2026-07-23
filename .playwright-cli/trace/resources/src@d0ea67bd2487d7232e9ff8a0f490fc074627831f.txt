@@ -1,0 +1,54 @@
+const { BasePage } = require('./BasePage');
+
+class MarketplacePage extends BasePage {
+  /**
+   * @param {import('@playwright/test').Page} page
+   */
+  constructor(page) {
+    super(page);
+    this.addButton = page.getByRole('button', { name: '+ Post a listing' });
+    this.nameInput = page.locator('#mk-nome');
+    this.conditionSelect = page.locator('#mk-condition');
+    this.priceInput = page.locator('#mk-price');
+    this.phoneInput = page.locator('#mk-telefone');
+    this.emailInput = page.locator('#mk-email');
+    this.postedByInput = page.locator('#mk-postedby');
+    this.saveButton = page.locator('#saveBtnMkt');
+
+    this.priceError = page.locator('#mkerr-price');
+    this.contactError = page.locator('#mkerr-contact');
+  }
+
+  async goto() {
+    await super.goto('/');
+    await this.page.getByRole('button', { name: 'Marketplace' }).click();
+  }
+
+  listingTypeChip(type) {
+    return this.page.locator('#overlayMkt').getByText(type, { exact: false });
+  }
+
+  card(name) {
+    return this.page
+      .locator('#gridAreaMkt .card')
+      .filter({ has: this.page.getByRole('heading', { name, exact: true }) });
+  }
+
+  async openForm() {
+    await this.addButton.click();
+  }
+
+  async fillRequiredFields({ name, type, condition, postedBy }) {
+    await this.nameInput.fill(name);
+    await this.listingTypeChip(type).click();
+    await this.conditionSelect.selectOption({ label: condition });
+    await this.postedByInput.fill(postedBy);
+  }
+
+  async deleteDirectly(name) {
+    this.page.once('dialog', (dialog) => dialog.accept());
+    await this.card(name).getByRole('button', { name: 'Delete' }).click();
+  }
+}
+
+module.exports = { MarketplacePage };

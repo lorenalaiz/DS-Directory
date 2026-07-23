@@ -46,6 +46,12 @@ jobs:
       - name: Wait for emulators to be ready
         run: npx wait-on tcp:8080 tcp:9099 tcp:9199 --timeout 180000
 
+      - name: Create test admin user in emulator
+        run: |
+          curl -f -s -X POST "http://localhost:9099/identitytoolkit.googleapis.com/v1/accounts:signUp?key=fake-api-key" \
+            -H "Content-Type: application/json" \
+            -d "{\"email\":\"${{ secrets.ADMIN_EMAIL }}\",\"password\":\"${{ secrets.ADMIN_PASSWORD }}\",\"returnSecureToken\":true}"
+
       - name: Show emulator log on failure
         if: failure()
         run: cat firebase-emulator-ci.log
@@ -60,6 +66,8 @@ jobs:
         run: npm run test:ui
         env:
           BASE_URL: http://localhost:3000
+          ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
+          ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
 
       - name: Upload report
         if: failure()

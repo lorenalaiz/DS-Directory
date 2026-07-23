@@ -1,0 +1,206 @@
+{
+  "generatedDate": "2026-07-23",
+  "mode": "baseline",
+  "branch": null,
+  "baseBranch": null,
+  "maxCases": 12,
+  "testCases": [
+    {
+      "id": "P0-1",
+      "priority": "P0",
+      "title": "Admin login grants access to admin-only tabs and controls",
+      "description": "Verifies the core auth boundary — a successful admin login must reveal admin-only functionality (Messages, Activity, Requests, admin tools) and hide public-only UI (Contact button, NDIS banner/tab, Install App button), since every other admin-path test case depends on this working.",
+      "steps": [
+        "Load the app as a signed-out visitor.",
+        "Confirm Messages/Activity/Requests tabs and the admin tools dropdown are not visible.",
+        "Open the Admin login modal and sign in with valid admin credentials.",
+        "Observe the tab bar and header controls after login."
+      ],
+      "expectedResult": "After login, Messages/Activity/Requests tabs and admin tools appear; Contact button, NDIS Guide, and Install App button are hidden.",
+      "automated": true,
+      "automatedSpecFile": "e2e-testing/tests/ui/admin-auth.spec.js"
+    },
+    {
+      "id": "P0-2",
+      "priority": "P0",
+      "title": "Public visitor can create a new Professional entry directly",
+      "description": "Creating directory entries is the app's primary purpose and is explicitly allowed without login — this must work for an unauthenticated visitor with no request/approval step involved.",
+      "steps": [
+        "As a signed-out visitor, open the Professionals tab.",
+        "Click \"+ Add professional\".",
+        "Fill in a required name and select at least one specialty.",
+        "Submit the form.",
+        "Confirm the new entry appears in the Professionals list immediately."
+      ],
+      "expectedResult": "The new professional entry is created and visible right away, with no approval step required.",
+      "automated": true,
+      "automatedSpecFile": "e2e-testing/tests/ui/professionals.spec.js"
+    },
+    {
+      "id": "P0-3",
+      "priority": "P0",
+      "title": "Non-admin editing an existing entry creates a pending request, not a live change",
+      "description": "This is the core data-integrity safeguard for the whole app — a non-admin must never be able to directly modify existing data; edits must be redirected into the delete-requests moderation queue.",
+      "steps": [
+        "As a signed-out visitor, open any existing Professional entry and click Edit.",
+        "Change a field (e.g. phone number) and submit.",
+        "Reload the Professionals list and confirm the original entry is unchanged.",
+        "Log in as admin and open the Requests tab."
+      ],
+      "expectedResult": "The original entry's data is untouched after the non-admin \"edit\"; the proposed change appears in Requests as a pending edit request with both original and proposed values shown.",
+      "automated": true,
+      "automatedSpecFile": "e2e-testing/tests/ui/professionals.spec.js"
+    },
+    {
+      "id": "P0-4",
+      "priority": "P0",
+      "title": "Non-admin deleting an existing entry creates a pending removal request requiring a reason",
+      "description": "Mirrors the edit-request safeguard for deletions — a non-admin delete action must never remove live data directly, and the removal-request flow must enforce a reason field.",
+      "steps": [
+        "As a signed-out visitor, open any existing entry (any section) and click Delete.",
+        "Attempt to submit the removal request with no reason entered.",
+        "Enter a reason and submit.",
+        "Reload the list and confirm the entry still exists; log in as admin and check Requests."
+      ],
+      "expectedResult": "Submitting with no reason is blocked; after entering a reason, the entry remains live and a pending delete request (with reason) appears in the admin Requests queue.",
+      "automated": true,
+      "automatedSpecFile": "e2e-testing/tests/ui/professionals.spec.js"
+    },
+    {
+      "id": "P0-5",
+      "priority": "P0",
+      "title": "Admin approving a pending request applies the change to live data",
+      "description": "Completes the moderation loop started by the two cases above — an approved request must actually be applied to the underlying collection, and a denied one must not be.",
+      "steps": [
+        "As admin, open the Requests tab with at least one pending edit request.",
+        "Review the shown diff (original vs. proposed values).",
+        "Click Approve.",
+        "Navigate to the affected entry in its section."
+      ],
+      "expectedResult": "The entry now reflects the proposed changes, and the request is removed from the pending Requests queue.",
+      "automated": true,
+      "automatedSpecFile": "e2e-testing/tests/ui/professionals.spec.js"
+    },
+    {
+      "id": "P0-6",
+      "priority": "P0",
+      "title": "Restore-from-backup requires explicit destructive confirmation before replacing data",
+      "description": "Restore deletes and recreates the professionals, products, families, and marketplace collections wholesale — the highest blast-radius action in the app. It must never run without an explicit \"REPLACE everything\" confirmation, and cancelling must leave existing data untouched.",
+      "steps": [
+        "As admin, take a Backup (downloads a JSON export).",
+        "Open Restore and select the backup JSON file.",
+        "When the destructive confirmation dialog appears, click Cancel.",
+        "Confirm existing data is unchanged; repeat Restore and this time confirm the destructive dialog."
+      ],
+      "expectedResult": "Cancelling leaves all existing data untouched. Confirming replaces professionals/products/families/marketplace with the backup's contents exactly.",
+      "automated": true,
+      "automatedSpecFile": "e2e-testing/tests/ui/admin-tools.spec.js"
+    },
+    {
+      "id": "P1-1",
+      "priority": "P1",
+      "title": "Admin login with invalid credentials shows an error and grants no access",
+      "description": "The failure path of the login flow must surface a clear error and must not leave the app in a partially-authenticated state.",
+      "steps": [
+        "Open the Admin login modal.",
+        "Enter a valid-looking but incorrect email/password combination.",
+        "Submit."
+      ],
+      "expectedResult": "A visible error message appears; admin-only tabs remain hidden and the visitor stays in the signed-out state.",
+      "automated": true,
+      "automatedSpecFile": "e2e-testing/tests/ui/admin-auth.spec.js"
+    },
+    {
+      "id": "P1-2",
+      "priority": "P1",
+      "title": "Marketplace listing price is required only for Sell/Rent, not Donate/Lend",
+      "description": "Price is conditionally required based on listing type — this cross-field rule is easy to regress and directly affects whether sellers can post valid listings.",
+      "steps": [
+        "Open the Marketplace \"+ Add listing\" form.",
+        "Select type \"Donate\", leave price blank, fill other required fields, submit.",
+        "Repeat with type \"Sell\" and price left blank — attempt submit.",
+        "Enter a price greater than 0 for the \"Sell\" listing and submit."
+      ],
+      "expectedResult": "Donate submits successfully with no price. Sell is blocked until a price greater than 0 is entered, then submits successfully.",
+      "automated": true,
+      "automatedSpecFile": "e2e-testing/tests/ui/marketplace.spec.js"
+    },
+    {
+      "id": "P1-3",
+      "priority": "P1",
+      "title": "Marketplace listing requires at least a phone number or an email",
+      "description": "Contact info is validated as \"at least one of phone or email\" rather than both being independently optional — a real user must be reachable by the poster.",
+      "steps": [
+        "Open the Marketplace \"+ Add listing\" form and fill all required fields except phone and email.",
+        "Attempt to submit.",
+        "Fill in only an email (leave phone blank) and submit."
+      ],
+      "expectedResult": "Submission is blocked with neither phone nor email filled; submission succeeds once at least one is provided.",
+      "automated": true,
+      "automatedSpecFile": "e2e-testing/tests/ui/marketplace.spec.js"
+    },
+    {
+      "id": "P1-4",
+      "priority": "P1",
+      "title": "Family form rejects a suburb that wasn't selected from the autocomplete list",
+      "description": "Suburb must come from the address-autocomplete selection, not free-typed text, since downstream features (map pins, postcode auto-fill) depend on a resolved suburb value.",
+      "steps": [
+        "Open the Families \"+ Add family\" form.",
+        "Type a suburb name in the Suburb field but do not select a suggestion from the dropdown.",
+        "Fill other required fields and attempt to submit.",
+        "Retype the suburb and select a suggestion from the autocomplete dropdown, then submit."
+      ],
+      "expectedResult": "Submission is blocked when the suburb wasn't chosen from a suggestion; it succeeds once a suggestion is explicitly selected, with postcode auto-filled.",
+      "automated": false,
+      "automatedSpecFile": null
+    },
+    {
+      "id": "P1-5",
+      "priority": "P1",
+      "title": "Visitor can add a star rating and comment review to a Professional listing",
+      "description": "Reviews are a core engagement feature on professional listings and should save and display correctly.",
+      "steps": [
+        "Open an existing Professional entry.",
+        "Check \"leave a review\", select a star rating, and enter a comment.",
+        "Submit.",
+        "Reopen the entry."
+      ],
+      "expectedResult": "The review (rating + comment) is saved and visible on the professional's entry.",
+      "automated": true,
+      "automatedSpecFile": "e2e-testing/tests/ui/professionals.spec.js"
+    },
+    {
+      "id": "P1-6",
+      "priority": "P1",
+      "title": "Contact form submission is visible to admin in the Messages tab",
+      "description": "The public Contact modal is the only way a visitor reaches an admin directly outside the moderation-request flow, so it must reliably create a readable message for admin.",
+      "steps": [
+        "As a signed-out visitor, open the Contact modal.",
+        "Fill in required name and message fields, and submit.",
+        "Log in as admin and open the Messages tab."
+      ],
+      "expectedResult": "The submitted message appears in the admin Messages inbox with the submitted name and message text.",
+      "automated": true,
+      "automatedSpecFile": "e2e-testing/tests/ui/contact.spec.js"
+    }
+  ],
+  "alreadyCovered": [
+    "Homepage loads and shows the main heading — covered by the existing Homepage UI > loads and shows the main heading test in e2e-testing/tests/ui/example.spec.js"
+  ],
+  "notIncluded": [
+    { "priority": "P2", "title": "NDIS Guide static content displays correctly and is hidden when admin is logged in" },
+    { "priority": "P2", "title": "Last active tab persists across a page reload" },
+    { "priority": "P2", "title": "Install App button behavior differs correctly between iOS/Safari and Android/Chrome, and hides once installed" },
+    { "priority": "P2", "title": "Card view / table view toggle works correctly per section" },
+    { "priority": "P2", "title": "Service worker falls back to cached app shell when offline" },
+    { "priority": "P1", "title": "Admin denying a pending request removes it from the queue without applying the change" },
+    { "priority": "P1", "title": "Photo upload exceeding the 5MB size cap is rejected on Family/Marketplace forms" },
+    { "priority": "P1", "title": "Directory search and filter (by specialty/suburb/category) returns correct results" },
+    { "priority": "P1", "title": "Activity log filters entries correctly by date range" }
+  ],
+  "unclearImpact": [
+    "No firestore.rules or storage.rules files exist in the repo, so server-side access control (e.g. whether an unauthenticated client could write directly to ds-network-activity or ds-network-messages by calling the Firestore API directly) can't be confirmed from code alone.",
+    "ds-network-data legacy collection and its one-time migration functions appear to be transitional — unclear whether this migration path is still expected to run in production or is dead code.",
+    "P1-4 (family suburb autocomplete) was not automated: the suburb field calls the live Google Places API, which is blocked for localhost in this dev environment, so the 'select a suggestion and submit successfully' step cannot be executed here."
+  ]
+}

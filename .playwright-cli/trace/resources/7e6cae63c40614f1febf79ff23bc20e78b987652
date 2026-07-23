@@ -1,0 +1,235 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: ui/marketplace.spec.js >> Marketplace >> marketplace listing price is required only for Sell/Rent, not Donate/Lend
+- Location: e2e-testing/tests/ui/marketplace.spec.js:10:3
+
+# Error details
+
+```
+Test timeout of 30000ms exceeded.
+```
+
+```
+Error: locator.click: Test timeout of 30000ms exceeded.
+Call log:
+  - waiting for getByRole('button', { name: '🔐 Admin' })
+    - locator resolved to <button id="adminLoginBtn" class="btn btn-ghost">🔐 Admin</button>
+  - attempting click action
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div id="overlayMkt" class="overlay open">…</div> intercepts pointer events
+    - retrying click action
+    - waiting 20ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div id="overlayMkt" class="overlay open">…</div> intercepts pointer events
+    - retrying click action
+      - waiting 100ms
+    56 × waiting for element to be visible, enabled and stable
+       - element is visible, enabled and stable
+       - scrolling into view if needed
+       - done scrolling
+       - <div id="overlayMkt" class="overlay open">…</div> intercepts pointer events
+     - retrying click action
+       - waiting 500ms
+
+```
+
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e5]:
+        - generic [ref=e6]: T21 Community
+        - heading "DS Network" [level=1] [ref=e7]
+      - paragraph [ref=e9]: A community-built directory of doctors, therapists, products, and families, recommended by parents in our T21 community.
+    - generic [ref=e10]:
+      - button "Professionals" [ref=e11] [cursor=pointer]
+      - button "Products & Toys" [ref=e12] [cursor=pointer]
+      - button "Families" [ref=e13] [cursor=pointer]
+      - button "Marketplace" [ref=e14] [cursor=pointer]
+      - button "NDIS Guide" [ref=e15] [cursor=pointer]
+      - generic [ref=e16]:
+        - button "Contact" [ref=e17] [cursor=pointer]
+        - button "📲 Install App" [ref=e18] [cursor=pointer]
+        - button "🔐 Admin" [ref=e19] [cursor=pointer]
+    - generic [ref=e20]:
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - img [ref=e23]
+          - textbox "Search by item, category, or note..." [ref=e26]
+        - combobox [ref=e27] [cursor=pointer]:
+          - option "All listing types" [selected]
+          - option "Donate"
+          - option "Sell"
+          - option "Rent"
+          - option "Lend"
+        - generic [ref=e28]:
+          - button "▦" [ref=e29] [cursor=pointer]
+          - button "☰" [ref=e30] [cursor=pointer]
+        - button "+ Post a listing" [ref=e31] [cursor=pointer]
+      - generic [ref=e32]: 1 of 1 listing
+      - generic [ref=e35]:
+        - generic [ref=e36]:
+          - generic [ref=e37]: 🎁 Donate
+          - generic [ref=e39]: New
+        - generic [ref=e41]:
+          - heading "E2E Test Listing Donate 1784842102809-2aqupd" [level=3] [ref=e42]
+          - generic [ref=e43]:
+            - img [ref=e44]
+            - generic [ref=e46]: 0412 345 678
+          - generic [ref=e47]: Posted by Visitor Tester
+          - generic [ref=e48]:
+            - button "Request removal" [ref=e49] [cursor=pointer]
+            - button "Edit" [ref=e50] [cursor=pointer]
+  - generic [ref=e52]:
+    - heading "Post a listing" [level=2] [ref=e54]
+    - generic [ref=e55]:
+      - generic [ref=e56]:
+        - generic [ref=e57]:
+          - generic [ref=e58]: Item *
+          - textbox "E.g. Stokke Tripp Trapp high chair" [active] [ref=e59]: E2E Test Listing Sell 1784842102809-n6r608
+        - generic [ref=e60]:
+          - generic [ref=e61]: Listing type *
+          - generic [ref=e62]:
+            - generic [ref=e63] [cursor=pointer]: 🎁 Donate
+            - generic [ref=e64] [cursor=pointer]: 💲 Sell
+            - generic [ref=e65] [cursor=pointer]: 🔁 Rent
+            - generic [ref=e66] [cursor=pointer]: 🤝 Lend
+        - generic [ref=e67]:
+          - generic [ref=e68]: Condition *
+          - combobox [ref=e69]:
+            - option "Select condition..." [selected]
+            - option "New"
+            - option "Used - Like New"
+            - option "Used - Good"
+            - option "Used - Fair"
+        - generic [ref=e70]:
+          - generic [ref=e71]: Categories
+          - generic [ref=e72]:
+            - generic [ref=e73] [cursor=pointer]: Baby Gear
+            - generic [ref=e74] [cursor=pointer]: Clothing
+            - generic [ref=e75] [cursor=pointer]: Toys
+            - generic [ref=e76] [cursor=pointer]: Furniture
+            - generic [ref=e77] [cursor=pointer]: Books
+            - generic [ref=e78] [cursor=pointer]: Feeding
+            - generic [ref=e79] [cursor=pointer]: Nursery
+            - generic [ref=e80] [cursor=pointer]: Adaptive Equipment
+          - textbox "Other (separate with commas if more than one)" [ref=e81]
+        - generic [ref=e82]:
+          - generic [ref=e83]: Price (required for Sell/Rent)
+          - textbox "E.g. $50, Free, Negotiable" [ref=e84]
+        - generic [ref=e85]:
+          - generic [ref=e86]:
+            - generic [ref=e87]: Phone (phone or email required)
+            - textbox "(04) 0000 0000" [ref=e88]
+          - generic [ref=e89]:
+            - generic [ref=e90]: Email (phone or email required)
+            - textbox "you@example.com" [ref=e91]
+        - generic [ref=e92]:
+          - generic [ref=e93]: Photos (optional, up to 5)
+          - generic [ref=e95]:
+            - button "×" [ref=e96] [cursor=pointer]
+            - button "Choose File" [ref=e97]
+            - textbox "...or paste an image link" [ref=e99]
+          - button "+ Add photo" [ref=e100] [cursor=pointer]
+        - generic [ref=e101]:
+          - generic [ref=e102]: Posted by *
+          - textbox "Your name" [ref=e103]
+        - generic [ref=e104]:
+          - generic [ref=e105]: Description
+          - textbox "Condition, size, pickup location, anything worth knowing." [ref=e106]
+      - generic [ref=e107]:
+        - button "Cancel" [ref=e108] [cursor=pointer]
+        - button "Save" [ref=e109] [cursor=pointer]
+  - generic: Listing posted.
+  - generic [ref=e110]:
+    - generic [ref=e111]:
+      - img [ref=e112]
+      - text: Entries are saved automatically and visible to everyone who opens this directory.
+    - generic [ref=e115]:
+      - text: 🚧 Early versions —
+      - generic [ref=e116] [cursor=pointer]: let us know
+      - text: if something's off.
+  - paragraph [ref=e117]: Running in emulator mode. Do not use with production credentials.
+```
+
+# Test source
+
+```ts
+  1  | const { BasePage } = require('./BasePage');
+  2  | 
+  3  | class HomePage extends BasePage {
+  4  |   /**
+  5  |    * @param {import('@playwright/test').Page} page
+  6  |    */
+  7  |   constructor(page) {
+  8  |     super(page);
+  9  |     this.heading = page.locator('h1');
+  10 | 
+  11 |     this.professionalsTab = page.getByRole('button', { name: 'Professionals' });
+  12 |     this.productsTab = page.getByRole('button', { name: 'Products & Toys' });
+  13 |     this.familiesTab = page.getByRole('button', { name: 'Families' });
+  14 |     this.marketplaceTab = page.getByRole('button', { name: 'Marketplace' });
+  15 |     this.messagesTab = page.getByRole('button', { name: 'Messages' });
+  16 |     this.activityTab = page.getByRole('button', { name: 'Activity' });
+  17 |     this.requestsTab = page.getByRole('button', { name: 'Requests' });
+  18 |     this.ndisGuideTab = page.getByRole('button', { name: 'NDIS Guide' });
+  19 | 
+  20 |     this.contactButton = page.getByRole('button', { name: 'Contact' });
+  21 |     this.installAppButton = page.getByRole('button', { name: 'Install App' });
+  22 |     this.adminButton = page.getByRole('button', { name: '🔐 Admin' });
+  23 |     this.adminToolsButton = page.getByRole('button', { name: '⚙️ Admin tools' });
+  24 |     this.backupButton = page.getByRole('button', { name: '⬇️ Backup' });
+  25 |     this.restoreButton = page.getByRole('button', { name: '⬆️ Restore' });
+  26 |     this.signOutButton = page.getByRole('button', { name: 'Sign out' });
+  27 | 
+  28 |     this.adminEmailInput = page.locator('#admin-email');
+  29 |     this.adminPasswordInput = page.locator('#admin-password');
+  30 |     this.adminSignInButton = page.getByRole('button', { name: 'Sign in' });
+  31 |     this.adminLoginCancelButton = page.getByRole('button', { name: 'Cancel' });
+  32 |     this.adminSignedInToast = page.getByText('Signed in as admin.');
+  33 |     this.adminLoginError = page.locator('#admin-login-error');
+  34 |   }
+  35 | 
+  36 |   async goto() {
+  37 |     await super.goto('/');
+  38 |   }
+  39 | 
+  40 |   async loginAsAdmin(email, password) {
+> 41 |     await this.adminButton.click();
+     |                            ^ Error: locator.click: Test timeout of 30000ms exceeded.
+  42 |     await this.adminEmailInput.fill(email);
+  43 |     await this.adminPasswordInput.fill(password);
+  44 |     await this.adminSignInButton.click();
+  45 |     await this.adminSignedInToast.waitFor();
+  46 |   }
+  47 | 
+  48 |   async attemptAdminLogin(email, password) {
+  49 |     await this.adminButton.click();
+  50 |     await this.adminEmailInput.fill(email);
+  51 |     await this.adminPasswordInput.fill(password);
+  52 |     await this.adminSignInButton.click();
+  53 |   }
+  54 | 
+  55 |   async signOut() {
+  56 |     await this.adminToolsButton.click();
+  57 |     await this.signOutButton.click();
+  58 |   }
+  59 | }
+  60 | 
+  61 | module.exports = { HomePage };
+  62 | 
+```
